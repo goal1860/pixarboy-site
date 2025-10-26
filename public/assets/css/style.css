@@ -390,6 +390,9 @@ a:hover {
     background: var(--gradient-accent);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .post-card-image img {
@@ -400,7 +403,11 @@ a:hover {
 }
 
 .post-card:hover .post-card-image img {
-    transform: scale(1.1);
+    transform: scale(1.05);
+}
+
+.post-featured-image img {
+    display: block;
 }
 
 .post-card-badge {
@@ -999,6 +1006,142 @@ select.form-control {
     border-top: 1px solid rgba(255,255,255,0.1);
     color: rgba(255,255,255,0.6);
     font-size: 0.9rem;
+}
+
+/* ============================================
+   Post Content Styling (Markdown)
+   ============================================ */
+.post-content h2 {
+    font-size: 1.75rem;
+    color: var(--dark-color);
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.post-content h3 {
+    font-size: 1.4rem;
+    color: var(--dark-color);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.post-content h4 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.post-content p {
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+.post-content ul,
+.post-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.post-content li {
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+    line-height: 1.7;
+}
+
+.post-content li strong {
+    color: var(--dark-color);
+}
+
+.post-content strong {
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.post-content code {
+    background: var(--light-color);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+}
+
+.post-content pre {
+    background: var(--dark-color);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+}
+
+.post-content pre code {
+    background: none;
+    border: none;
+    color: white;
+    padding: 0;
+}
+
+.post-content a {
+    color: var(--primary-color);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 107, 107, 0.3);
+    transition: all 0.3s ease;
+}
+
+.post-content a:hover {
+    color: var(--secondary-color);
+    text-decoration-color: var(--secondary-color);
+}
+
+.post-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.post-content hr {
+    border: none;
+    border-top: 2px solid var(--border-color);
+    margin: 2rem 0;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.post-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.post-content table th,
+.post-content table td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.post-content table th {
+    background: var(--light-color);
+    font-weight: 700;
+}
+
+/* First paragraph styling */
+.post-content > p:first-child {
+    font-size: 1.2rem;
+    color: var(--text-color);
 }
 
 /* ============================================

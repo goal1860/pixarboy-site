@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+  <!-- Background Pattern -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="airpodWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="20" flood-opacity="0.3"/>
+    </filter>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative Circles -->
+  <circle cx="100" cy="100" r="60" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="1100" cy="500" r="80" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="200" cy="450" r="40" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="1000" cy="150" r="50" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- Left AirPod -->
+  <g transform="translate(380, 200)" filter="url(#shadow)">
+    <!-- Ear tip -->
+    <ellipse cx="0" cy="0" rx="45" ry="50" fill="url(#airpodWhite)" opacity="0.95"/>
+    <ellipse cx="0" cy="-5" rx="35" ry="40" fill="#ffffff"/>
+    
+    <!-- Speaker mesh -->
+    <ellipse cx="0" cy="0" rx="20" ry="25" fill="#2C3E50" opacity="0.8"/>
+    <ellipse cx="0" cy="0" rx="18" ry="23" fill="#34495e"/>
+    
+    <!-- Body connection -->
+    <rect x="-15" y="35" width="30" height="20" rx="8" fill="url(#airpodWhite)"/>
+    
+    <!-- Stem -->
+    <rect x="-12" y="50" width="24" height="140" rx="12" fill="url(#airpodWhite)"/>
+    <rect x="-10" y="52" width="20" height="136" rx="10" fill="#ffffff"/>
+    
+    <!-- Stem details -->
+    <line x1="-8" y1="100" x2="8" y2="100" stroke="#e0e0e0" stroke-width="1"/>
+    <line x1="-8" y1="120" x2="8" y2="120" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <!-- Bottom cap -->
+    <ellipse cx="0" cy="190" rx="12" ry="6" fill="#e8e8e8"/>
+  </g>
+  
+  <!-- Right AirPod -->
+  <g transform="translate(820, 200)" filter="url(#shadow)">
+    <!-- Ear tip -->
+    <ellipse cx="0" cy="0" rx="45" ry="50" fill="url(#airpodWhite)" opacity="0.95"/>
+    <ellipse cx="0" cy="-5" rx="35" ry="40" fill="#ffffff"/>
+    
+    <!-- Speaker mesh -->
+    <ellipse cx="0" cy="0" rx="20" ry="25" fill="#2C3E50" opacity="0.8"/>
+    <ellipse cx="0" cy="0" rx="18" ry="23" fill="#34495e"/>
+    
+    <!-- Body connection -->
+    <rect x="-15" y="35" width="30" height="20" rx="8" fill="url(#airpodWhite)"/>
+    
+    <!-- Stem -->
+    <rect x="-12" y="50" width="24" height="140" rx="12" fill="url(#airpodWhite)"/>
+    <rect x="-10" y="52" width="20" height="136" rx="10" fill="#ffffff"/>
+    
+    <!-- Stem details -->
+    <line x1="-8" y1="100" x2="8" y2="100" stroke="#e0e0e0" stroke-width="1"/>
+    <line x1="-8" y1="120" x2="8" y2="120" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <!-- Bottom cap -->
+    <ellipse cx="0" cy="190" rx="12" ry="6" fill="#e8e8e8"/>
+  </g>
+  
+  <!-- Wireless waves (Left) -->
+  <g transform="translate(380, 150)" opacity="0.6">
+    <path d="M -60 0 Q -60 -30, -40 -35" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M -70 0 Q -70 -40, -50 -50" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Wireless waves (Right) -->
+  <g transform="translate(820, 150)" opacity="0.6">
+    <path d="M 60 0 Q 60 -30, 40 -35" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 70 0 Q 70 -40, 50 -50" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Text Content -->
+  <text x="600" y="480" font-family="'Inter', -apple-system, sans-serif" font-size="48" font-weight="800" fill="#ffffff" text-anchor="middle" filter="url(#glow)">
+    AirPods 4
+  </text>
+  
+  <text x="600" y="520" font-family="'Inter', -apple-system, sans-serif" font-size="24" font-weight="500" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    Design Meets Performance
+  </text>
+  
+  <!-- Rating Stars -->
+  <g transform="translate(480, 540)">
+    <text font-size="28" fill="#FFD93D">★★★★</text>
+    <text x="140" font-size="28" fill="rgba(255,255,255,0.4)">★</text>
+    <text x="175" font-size="20" fill="#ffffff" font-weight="600">4.5/5</text>
+  </g>
+  
+  <!-- Apple Logo (simplified) -->
+  <g transform="translate(1120, 40)">
+    <path d="M 0 10 Q -10 0, -5 -10 Q 0 -20, 10 -15 Q 20 -10, 15 5 Q 10 20, 0 10 Z" fill="rgba(255,255,255,0.3)"/>
+    <circle cx="8" cy="-18" r="3" fill="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Badge -->
+  <g transform="translate(100, 500)">
+    <rect x="0" y="0" width="140" height="40" rx="20" fill="rgba(255,255,255,0.2)"/>
+    <text x="70" y="26" font-family="'Inter', sans-serif" font-size="16" font-weight="700" fill="#ffffff" text-anchor="middle">
+      REVIEWED
+    </text>
+  </g>
+</svg>
+

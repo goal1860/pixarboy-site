@@ -1,5 +1,9 @@
 <?php
 require_once '../config/config.php';
+require_once '../includes/Parsedown.php';
+
+// Initialize Markdown parser
+$Parsedown = new Parsedown();
 
 // Get slug from URL
 $slug = $_GET['slug'] ?? '';
@@ -82,12 +86,27 @@ include '../includes/header.php';
             </div>
         </div>
         
-        <!-- Featured Image Placeholder -->
-        <div class="post-featured-image" style="width: 100%; height: 400px; background: var(--gradient-primary); border-radius: 16px; margin-bottom: 3rem; box-shadow: var(--shadow-lg);"></div>
+        <!-- Featured Image -->
+        <div class="post-featured-image" style="width: 100%; height: 400px; border-radius: 16px; margin-bottom: 3rem; box-shadow: var(--shadow-lg); overflow: hidden;">
+            <?php 
+            // Check for specific post images
+            $imagePath = null;
+            if ($post['slug'] === 'apple-airpods-4-review') {
+                $imagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+            }
+            
+            if ($imagePath): ?>
+                <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+            <?php else: ?>
+                <div style="width: 100%; height: 100%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+                    <?php echo strtoupper(substr($post['title'], 0, 1)); ?>
+                </div>
+            <?php endif; ?>
+        </div>
         
         <!-- Post Content -->
-        <div class="card" style="font-size: 1.125rem; line-height: 1.8;">
-            <?php echo nl2br(htmlspecialchars($post['content'])); ?>
+        <div class="card post-content" style="font-size: 1.125rem; line-height: 1.8;">
+            <?php echo $Parsedown->text($post['content']); ?>
         </div>
         
         <!-- Post Footer -->
@@ -118,6 +137,17 @@ include '../includes/header.php';
                     <?php foreach ($relatedPosts as $relatedPost): ?>
                         <article class="post-card">
                             <div class="post-card-image">
+                                <?php 
+                                // Check for specific post images
+                                $relatedImagePath = null;
+                                if ($relatedPost['slug'] === 'apple-airpods-4-review') {
+                                    $relatedImagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                                }
+                                
+                                if ($relatedImagePath): ?>
+                                    <img src="<?php echo $relatedImagePath; ?>" alt="<?php echo htmlspecialchars($relatedPost['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                <?php endif; ?>
+                                
                                 <span class="post-card-badge">
                                     <?php echo ucfirst($relatedPost['type'] ?? 'post'); ?>
                                 </span>

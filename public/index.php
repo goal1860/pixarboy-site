@@ -59,6 +59,17 @@ include '../includes/header.php';
                     <article class="post-card fade-in">
                         <!-- Post Image/Placeholder -->
                         <div class="post-card-image">
+                            <?php 
+                            // Check for specific post images
+                            $cardImagePath = null;
+                            if ($post['slug'] === 'apple-airpods-4-review') {
+                                $cardImagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                            }
+                            
+                            if ($cardImagePath): ?>
+                                <img src="<?php echo $cardImagePath; ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                            <?php endif; ?>
+                            
                             <span class="post-card-badge">
                                 <?php 
                                     $type = $post['type'] ?? 'post';
