@@ -61,10 +61,18 @@ class MigrationRunner {
      */
     private function loadMigration($file) {
         require_once $file;
-        $className = basename($file, '.php');
+        $baseName = basename($file, '.php');
+        
+        // Try with Migration_ prefix first
+        $className = 'Migration_' . $baseName;
+        
+        // Fallback to base name if prefixed version doesn't exist
+        if (!class_exists($className)) {
+            $className = $baseName;
+        }
         
         if (!class_exists($className)) {
-            throw new Exception("Migration class '{$className}' not found in {$file}");
+            throw new Exception("Migration class '{$className}' or 'Migration_{$baseName}' not found in {$file}");
         }
         
         return new $className($this->pdo);
