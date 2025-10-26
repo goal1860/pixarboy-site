@@ -79,13 +79,13 @@ if (isset($_GET['edit'])) {
     $editCategory = $stmt->fetch();
 }
 
-// Fetch all categories
+// Fetch all categories with product count
 $stmt = $pdo->query("SELECT c.*, 
     p.name as parent_name,
-    COUNT(DISTINCT cc.content_id) as post_count
+    COUNT(DISTINCT pc.product_id) as product_count
     FROM categories c
     LEFT JOIN categories p ON c.parent_id = p.id
-    LEFT JOIN content_categories cc ON c.id = cc.category_id
+    LEFT JOIN product_categories pc ON c.id = pc.category_id
     GROUP BY c.id
     ORDER BY 
         CASE WHEN c.parent_id IS NULL THEN c.id ELSE c.parent_id END,
@@ -255,7 +255,7 @@ include __DIR__ . '/../includes/header.php';
                                 <th>Name</th>
                                 <th>Slug</th>
                                 <th>Parent</th>
-                                <th>Posts</th>
+                                <th>Products</th>
                                 <th>Order</th>
                                 <th style="text-align: right;">Actions</th>
                             </tr>
@@ -288,7 +288,7 @@ include __DIR__ . '/../includes/header.php';
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <span class="badge badge-info"><?php echo $cat['post_count']; ?></span>
+                                        <span class="badge badge-info"><?php echo $cat['product_count']; ?> product(s)</span>
                                     </td>
                                     <td><?php echo $cat['display_order']; ?></td>
                                     <td class="table-actions" style="text-align: right;">
@@ -307,7 +307,7 @@ include __DIR__ . '/../includes/header.php';
                                         </a>
                                         <a href="?delete=<?php echo $cat['id']; ?>" 
                                            class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Are you sure you want to delete this category?<?php if ($cat['post_count'] > 0) echo '\n\nWarning: This category has ' . $cat['post_count'] . ' posts assigned to it.'; ?>')">
+                                           onclick="return confirm('Are you sure you want to delete this category?<?php if ($cat['product_count'] > 0) echo '\n\nWarning: This category has ' . $cat['product_count'] . ' product(s) assigned to it.'; ?>')">
                                             <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                             </svg>

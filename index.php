@@ -110,11 +110,10 @@ include __DIR__ . '/includes/header.php';
             <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">🛍️ Shop by Category</h2>
             <p style="color: var(--text-light);">Explore our curated selection of products</p>
         </div>
-        <div class="posts-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="category-grid">
             <?php foreach ($topCategories as $category): ?>
                 <a href="/category.php?slug=<?php echo urlencode($category['slug']); ?>" 
-                   class="card" 
-                   style="text-decoration: none; color: inherit; text-align: center; padding: 2rem; transition: all 0.3s ease;">
+                   class="category-card">
                     <div style="font-size: 3rem; margin-bottom: 0.5rem;">
                         <?php
                         $icons = [
