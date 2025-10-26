@@ -1,5 +1,5 @@
 <?php
-require_once '../config/config.php';
+require_once __DIR__ . '/config/config.php';
 
 // Get published content
 $pdo = getDBConnection();
@@ -21,7 +21,7 @@ $remainingPosts = array_slice($allPosts, 1);
 $recentPosts = array_slice($allPosts, 0, 5);
 
 $pageTitle = 'Home';
-include '../includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Hero/Featured Section -->
@@ -307,4 +307,4 @@ include '../includes/header.php';
     </div>
 </div>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/config.php';
+require_once __DIR__ . '/../config/config.php';
 requireLogin();
 
 $pdo = getDBConnection();
@@ -60,7 +60,7 @@ if ($action === 'list') {
 }
 
 $pageTitle = ucfirst($action) . ' Content';
-include '../../includes/header.php';
+include __DIR__ . '/../includes/header.php';
 ?>
 
 <?php if ($action === 'list'): ?>
@@ -253,4 +253,4 @@ include '../../includes/header.php';
     </div>
 <?php endif; ?>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

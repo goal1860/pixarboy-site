@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/config.php';
+require_once __DIR__ . '/../config/config.php';
 requireLogin();
 
 if (!isAdmin()) {
@@ -71,7 +71,7 @@ if ($action === 'list') {
 }
 
 $pageTitle = ucfirst($action) . ' Users';
-include '../../includes/header.php';
+include __DIR__ . '/../includes/header.php';
 ?>
 
 <?php if ($action === 'list'): ?>
@@ -280,4 +280,4 @@ include '../../includes/header.php';
     </div>
 <?php endif; ?>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

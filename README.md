@@ -133,43 +133,42 @@ rm public/install.php
 
 ## File Structure
 
-### Hostinger-Ready Structure
+### Hostinger Git Deployment Structure
 
 ```
-pixarboy-site/
-├── config/                      # Secure - Above web root
+pixarboy-site/                   # Repository root (deploys to public_html/)
+├── config/                      # 🔒 Protected by .htaccess
 │   ├── config.php               # App configuration
 │   ├── database.php             # Database connection (NOT in git)
 │   └── database.example.php     # Example database config
-├── includes/                    # Secure - Above web root
+├── includes/                    # 🔒 Protected by .htaccess
 │   ├── header.php               # Modern navigation header
 │   ├── footer.php               # Enhanced footer with sections
 │   └── Parsedown.php            # Markdown parser
-├── public_html/                 # WEB ROOT - Maps to Hostinger's public_html
-│   ├── admin/
-│   │   ├── index.php            # Modern dashboard with stats
-│   │   ├── users.php            # User management
-│   │   └── content.php          # Content management
-│   ├── assets/
-│   │   ├── css/
-│   │   │   └── style.css        # Modern CSS with gradients & animations
-│   │   ├── js/
-│   │   │   └── main.js         # Interactive JavaScript features
-│   │   └── images/
-│   │       └── airpods-4-hero.svg  # Custom SVG illustrations
-│   ├── .htaccess               # Security and routing
-│   ├── index.php               # Homepage with hero section & sidebar
-│   ├── post.php                # Individual post view with Markdown
-│   ├── login.php               # Beautiful login page
-│   ├── logout.php              # Logout handler
-│   └── install.php             # Database installer
-├── .htaccess                   # Root protection
-├── .gitignore                  # Git ignore rules
-├── DEPLOYMENT.md               # Hostinger deployment guide
-└── README.md                   # This file
+├── admin/                       # ✅ Admin area
+│   ├── index.php                # Modern dashboard with stats
+│   ├── users.php                # User management
+│   └── content.php              # Content management
+├── assets/                      # ✅ Public assets
+│   ├── css/
+│   │   └── style.css            # Modern CSS with gradients & animations
+│   ├── js/
+│   │   └── main.js             # Interactive JavaScript features
+│   └── images/
+│       └── airpods-4-hero.svg  # Custom SVG illustrations
+├── .htaccess                    # Security, routing & protection
+├── .gitignore                   # Git ignore rules
+├── index.php                    # Homepage with hero section & sidebar
+├── post.php                     # Individual post view with Markdown
+├── login.php                    # Beautiful login page
+├── logout.php                   # Logout handler
+├── install.php                  # Database installer (delete after use!)
+├── HOSTINGER_GIT_DEPLOY.md      # Git deployment guide (recommended)
+├── DEPLOYMENT.md                # Manual deployment guide
+└── README.md                    # This file
 ```
 
-**Security Note:** The `config/` and `includes/` directories are kept outside `public_html` for security. Only `public_html/` contents are web-accessible.
+**Security Note:** `config/` and `includes/` directories are protected by `.htaccess` rules that deny web access. They're in the repository but blocked from public access when deployed.
 
 ## Design Features
 
@@ -296,16 +295,22 @@ Edit CSS variables in `public/assets/css/style.css`:
 - ✅ Safari (latest)
 - ✅ Mobile browsers (iOS Safari, Chrome Mobile)
 
-### Hostinger Deployment
+### Hostinger Git Deployment (Recommended) 🚀
 
-For complete deployment instructions to Hostinger shared hosting, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+The easiest way to deploy! Use Hostinger's built-in Git deployment feature.
 
-Quick steps:
-1. Upload `config/` and `includes/` to root directory
-2. Upload `public_html/` contents to Hostinger's `public_html/`
-3. Copy `database.example.php` to `database.php` and configure
-4. Run `/install.php` once
-5. Delete `install.php`
+**Quick Start:**
+1. In Hostinger hPanel: **Advanced** → **Git** → **Create Repository**
+2. Repository: `https://github.com/goal1860/pixarboy-site.git`
+3. Branch: `main`
+4. Directory: *(leave blank)*
+5. Click Create
+
+For complete step-by-step instructions, see **[HOSTINGER_GIT_DEPLOY.md](HOSTINGER_GIT_DEPLOY.md)**.
+
+### Manual Hostinger Deployment
+
+For manual FTP/File Manager deployment instructions, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
 
 ### Local Development
 

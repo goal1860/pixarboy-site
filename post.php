@@ -1,6 +1,6 @@
 <?php
-require_once '../config/config.php';
-require_once '../includes/Parsedown.php';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/Parsedown.php';
 
 // Initialize Markdown parser
 $Parsedown = new Parsedown();
@@ -37,7 +37,7 @@ $stmt->execute([$post['id']]);
 $relatedPosts = $stmt->fetchAll();
 
 $pageTitle = $post['title'];
-include '../includes/header.php';
+include __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Post Content -->
@@ -195,5 +195,5 @@ include '../includes/header.php';
     </div>
 </article>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>
 
