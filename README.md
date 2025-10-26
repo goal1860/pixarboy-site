@@ -24,6 +24,7 @@ A beautiful, modern Content Management System built with PHP and MySQL, featurin
 - **Social Sharing**: Share buttons for Twitter, Facebook, and LinkedIn
 - **Empty States**: Friendly messages when no content exists
 - **Improved Alerts**: Auto-dismissible notifications with smooth animations
+- **Relative Paths**: No BASE_URL configuration needed - works on any domain automatically
 
 ## Features
 
@@ -73,6 +74,8 @@ define('DB_NAME', 'pixarboy_cms');
 define('DB_USER', 'your_username');
 define('DB_PASS', 'your_password');
 ```
+
+**Note:** BASE_URL configuration is optional - the site uses relative paths and works automatically!
 
 ### 2. Install the Database
 

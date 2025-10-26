@@ -64,16 +64,16 @@ Directory (optional):
    define('DB_PASS', 'your_password_here');       // Your password
    ```
 
-3. **Update Site Configuration** ⚠️ **CRITICAL**
+3. **Update Site Configuration** (Optional)
    
-   Edit `public_html/config/config.php` and update BASE_URL with your actual domain:
+   Edit `public_html/config/config.php` if you want to customize site settings:
    ```php
    define('SITE_NAME', 'PixarBoy');
-   define('BASE_URL', 'https://yourdomain.com'); // ⚠️ MUST CHANGE! No trailing slash!
+   define('BASE_URL', ''); // Leave empty - site uses relative paths (recommended)
    define('ADMIN_EMAIL', 'your@email.com');
    ```
    
-   **Warning:** If you don't change `BASE_URL` from `http://localhost`, all links and redirects (including login) will go to localhost instead of your domain!
+   **Note:** The site now uses relative paths, so BASE_URL configuration is optional. All links and redirects work automatically!
 
 ### 5. Run Installation
 
@@ -212,29 +212,15 @@ Hostinger public_html/
 2. Check if mod_rewrite is enabled (usually is on Hostinger)
 3. Try accessing: `https://yourdomain.com/config/` - should show 403 Forbidden
 
-### Issue: Login Redirects to Localhost
-
-**Cause:** BASE_URL not updated from default
-
-**Fix:**
-1. Edit `config/config.php`
-2. Change from `http://localhost` to your actual domain:
-   ```php
-   define('BASE_URL', 'https://yourdomain.com'); // NO trailing slash!
-   ```
-3. Save and test login again
-
 ### Issue: CSS/JS Not Loading
 
-**Cause:** Wrong BASE_URL
+**Cause:** Files not uploaded correctly or `.htaccess` issue
 
 **Fix:**
-1. Edit `config/config.php`
-2. Update `BASE_URL` to your actual domain:
-   ```php
-   define('BASE_URL', 'https://yourdomain.com');
-   ```
-3. No trailing slash!
+1. Check that `assets/` folder exists with `css/` and `js/` subdirectories
+2. Verify `.htaccess` is uploaded and mod_rewrite is enabled
+3. Check file permissions (644 for files, 755 for directories)
+4. Clear browser cache
 
 ### Issue: Database Connection Failed
 
@@ -310,7 +296,7 @@ config/database.php: 640 (more secure)
 - [ ] `install.php` deleted
 - [ ] Admin password changed
 - [ ] HTTPS enabled (`.htaccess` uncommented)
-- [ ] **⚠️ BASE_URL** updated from localhost to your domain in `config/config.php`
+- [ ] Site name updated in `config/config.php` (optional)
 - [ ] Can login to admin panel
 - [ ] Can create/edit/delete posts
 - [ ] CSS/JS loading correctly
