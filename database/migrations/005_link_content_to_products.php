@@ -33,7 +33,7 @@ class Migration_005_link_content_to_products extends Migration {
         }
     }
     
-    public function getDescription() {
+    public function getName() {
         return "Link Content to Products";
     }
 }
