@@ -33,8 +33,11 @@ class Migration_001_create_base_tables extends Migration {
                     INDEX idx_role (role)
                 )
             ", "Failed to create users table");
-            
-            // Create default admin user (password: admin123)
+        }
+        
+        // Create default admin user if doesn't exist
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM users WHERE username = 'admin'");
+        if ($stmt->fetchColumn() == 0) {
             $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
             $stmt->execute([
                 'admin', 
@@ -84,7 +87,11 @@ class Migration_001_create_base_tables extends Migration {
                     INDEX idx_order (display_order)
                 )
             ", "Failed to create categories table");
-            
+        }
+        
+        // Add default categories if table is empty
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM categories");
+        if ($stmt->fetchColumn() == 0) {
             // Add default categories
             $defaultCategories = [
                 ['name' => 'Reviews', 'slug' => 'reviews', 'description' => 'Product reviews and comparisons', 'parent_id' => null, 'order' => 1],
