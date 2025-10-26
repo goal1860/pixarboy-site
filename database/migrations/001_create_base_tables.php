@@ -111,7 +111,10 @@ class Migration_001_create_base_tables extends Migration {
     }
     
     public function down() {
-        // Drop tables in reverse order (respecting foreign keys)
+        // Disable foreign key checks to allow dropping tables
+        $this->execute("SET FOREIGN_KEY_CHECKS=0");
+        
+        // Drop tables in reverse order
         if ($this->tableExists('product_categories')) {
             $this->execute("DROP TABLE product_categories");
         }
@@ -131,6 +134,9 @@ class Migration_001_create_base_tables extends Migration {
         if ($this->tableExists('users')) {
             $this->execute("DROP TABLE users");
         }
+        
+        // Re-enable foreign key checks
+        $this->execute("SET FOREIGN_KEY_CHECKS=1");
     }
 }
 

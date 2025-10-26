@@ -25,8 +25,19 @@ class Migration_005_link_content_to_products extends Migration {
     
     public function down() {
         if ($this->columnExists('content', 'product_id')) {
-            // Drop foreign key first
-            $this->execute("ALTER TABLE content DROP FOREIGN KEY fk_content_product");
+            // Drop foreign key first (check if it exists)
+            try {
+                $this->execute("ALTER TABLE content DROP FOREIGN KEY fk_content_product");
+            } catch (PDOException $e) {
+                // Foreign key might not exist, continue
+            }
+            
+            // Drop the index
+            try {
+                $this->execute("ALTER TABLE content DROP INDEX idx_product_id");
+            } catch (PDOException $e) {
+                // Index might not exist, continue
+            }
             
             // Drop the column
             $this->execute("ALTER TABLE content DROP COLUMN product_id");

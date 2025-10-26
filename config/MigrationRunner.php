@@ -224,9 +224,18 @@ class MigrationRunner {
      * Reset all migrations (DANGER!)
      */
     public function reset() {
+        // Disable foreign key checks globally to allow dropping tables/columns
+        echo "🔓 Disabling foreign key checks...\n";
+        $this->pdo->exec("SET FOREIGN_KEY_CHECKS=0");
+        echo "✓ Foreign key checks disabled\n\n";
+        
         // Get all migrations in reverse order
         $stmt = $this->pdo->query("SELECT migration FROM migrations ORDER BY batch DESC, id DESC");
         $migrations = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        echo "Found " . count($migrations) . " migration(s) to rollback\n\n";
+        
+        $errors = [];
         
         foreach ($migrations as $migrationName) {
             $file = $this->migrationsPath . '/' . $migrationName . '.php';
@@ -238,15 +247,32 @@ class MigrationRunner {
                     $migration->down();
                     echo "✓ DONE\n";
                 } catch (Exception $e) {
-                    echo "✗ FAILED: " . $e->getMessage() . "\n";
+                    $error = "✗ FAILED: " . $e->getMessage();
+                    echo $error . "\n";
+                    $errors[] = $error;
+                    // Continue with other migrations
                 }
             }
         }
         
         // Clear migrations table
+        echo "\n🗑️  Clearing migrations tracking table...\n";
         $this->pdo->exec("TRUNCATE TABLE migrations");
+        echo "✓ Migrations table cleared\n\n";
         
-        return ['message' => 'All migrations rolled back.'];
+        // Re-enable foreign key checks
+        echo "🔒 Re-enabling foreign key checks...\n";
+        $this->pdo->exec("SET FOREIGN_KEY_CHECKS=1");
+        echo "✓ Foreign key checks re-enabled\n";
+        
+        if (!empty($errors)) {
+            return [
+                'message' => 'All migrations rolled back with some errors.',
+                'errors' => $errors
+            ];
+        }
+        
+        return ['message' => 'All migrations rolled back successfully.'];
     }
 }
 
