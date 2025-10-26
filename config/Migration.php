@@ -29,27 +29,59 @@ abstract class Migration {
      * Helper: Check if table exists
      */
     protected function tableExists($tableName) {
-        $stmt = $this->pdo->prepare("SHOW TABLES LIKE ?");
-        $stmt->execute([$tableName]);
-        return $stmt->rowCount() > 0;
+        try {
+            // Use INFORMATION_SCHEMA for reliable table checking
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) 
+                FROM INFORMATION_SCHEMA.TABLES 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = ?
+            ");
+            $stmt->execute([$tableName]);
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
     
     /**
      * Helper: Check if column exists
      */
     protected function columnExists($tableName, $columnName) {
-        $stmt = $this->pdo->prepare("SHOW COLUMNS FROM `{$tableName}` LIKE ?");
-        $stmt->execute([$columnName]);
-        return $stmt->rowCount() > 0;
+        try {
+            // Use INFORMATION_SCHEMA for reliable column checking
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = ? 
+                AND COLUMN_NAME = ?
+            ");
+            $stmt->execute([$tableName, $columnName]);
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
     
     /**
      * Helper: Check if index exists
      */
     protected function indexExists($tableName, $indexName) {
-        $stmt = $this->pdo->prepare("SHOW INDEX FROM `{$tableName}` WHERE Key_name = ?");
-        $stmt->execute([$indexName]);
-        return $stmt->rowCount() > 0;
+        try {
+            // Use INFORMATION_SCHEMA for reliable index checking
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) 
+                FROM INFORMATION_SCHEMA.STATISTICS 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = ? 
+                AND INDEX_NAME = ?
+            ");
+            $stmt->execute([$tableName, $indexName]);
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
     
     /**
