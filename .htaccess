@@ -53,8 +53,13 @@
     RewriteRule ^includes/ - [F,L]
 </IfModule>
 
-# Alternative method - Deny access to config and includes
-<FilesMatch "^(config|includes)/">
+# Block access to database directory (migrations)
+<IfModule mod_rewrite.c>
+    RewriteRule ^database/ - [F,L]
+</IfModule>
+
+# Alternative method - Deny access to config, includes, and database
+<FilesMatch "^(config|includes|database)/">
     Order Allow,Deny
     Deny from all
 </FilesMatch>

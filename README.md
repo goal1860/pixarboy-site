@@ -79,26 +79,40 @@ define('DB_PASS', 'your_password');
 
 ### 2. Install the Database
 
+#### Option A: Using Migrations (Recommended)
+
+Run migrations via command line:
+```bash
+php migrate.php migrate
+```
+
+Or visit `/admin/migrations.php` after logging in (see credentials below).
+
+#### Option B: Legacy Installer
+
 Visit: `http://localhost/install.php`
 
-This will:
+Both methods will:
 - Create all necessary database tables
 - Create default admin account
+- Set up default categories
 
-### 2. Default Credentials
+### 3. Default Credentials
 
 **Username:** `admin`  
 **Password:** `admin123`
 
 ⚠️ **Important:** Change this password immediately after first login!
 
-### 3. Delete Installation File
+### 4. Delete Installation File (Optional)
 
-After successful installation, delete the `install.php` file for security:
+After successful installation, you can delete the `install.php` file for security:
 
 ```bash
-rm public/install.php
+rm install.php
 ```
+
+**Note:** The migration system is the recommended approach going forward.
 
 ## Usage
 
@@ -134,6 +148,91 @@ rm public/install.php
 4. Assign role and status
 5. Click "Save User"
 
+### Managing Categories
+
+1. Navigate to "Categories" in the admin menu
+2. Create parent categories (top-level)
+3. Create subcategories by selecting a parent
+4. Organize with display order
+5. Assign categories when creating/editing content
+
+**Hierarchical Structure Example:**
+```
+📁 Reviews
+  ├─ Audio
+  ├─ Mobile
+  └─ Laptops
+📁 Tech
+📁 Guides
+```
+
+## Database Migrations
+
+PixarBoy includes a robust migration system for managing database schema changes safely.
+
+### Why Migrations?
+
+- ✅ **Version Control:** Track database changes like code
+- ✅ **Reproducible:** Same schema on all environments
+- ✅ **Reversible:** Rollback changes if needed
+- ✅ **Safe:** Transactions prevent partial updates
+- ✅ **Documented:** Each change is clearly explained
+
+### Running Migrations
+
+**Via Command Line (Recommended):**
+```bash
+# Show migration status
+php migrate.php status
+
+# Run pending migrations
+php migrate.php migrate
+
+# Rollback last batch
+php migrate.php rollback
+
+# Reset all (DANGER!)
+php migrate.php reset
+```
+
+**Via Web Interface:**
+Visit `/admin/migrations.php` (Admin only)
+
+### Creating a Migration
+
+1. Create a file in `database/migrations/`:
+   ```
+   002_your_migration_name.php
+   ```
+
+2. Use this template:
+   ```php
+   <?php
+   class Migration_002_your_migration_name extends Migration {
+       
+       public function getName() {
+           return 'Your Migration Name';
+       }
+       
+       public function up() {
+           // Apply changes
+           $this->execute("ALTER TABLE...");
+       }
+       
+       public function down() {
+           // Revert changes
+           $this->execute("ALTER TABLE...");
+       }
+   }
+   ```
+
+3. Run the migration:
+   ```bash
+   php migrate.php migrate
+   ```
+
+See `database/migrations/README.md` for detailed documentation.
+
 ## File Structure
 
 ### Hostinger Git Deployment Structure
@@ -143,15 +242,23 @@ pixarboy-site/                   # Repository root (deploys to public_html/)
 ├── config/                      # 🔒 Protected by .htaccess
 │   ├── config.php               # App configuration
 │   ├── database.php             # Database connection (NOT in git)
-│   └── database.example.php     # Example database config
+│   ├── database.example.php     # Example database config
+│   ├── Migration.php            # Base migration class
+│   └── MigrationRunner.php      # Migration execution engine
 ├── includes/                    # 🔒 Protected by .htaccess
 │   ├── header.php               # Modern navigation header
 │   ├── footer.php               # Enhanced footer with sections
 │   └── Parsedown.php            # Markdown parser
+├── database/                    # 🔒 Protected by .htaccess
+│   └── migrations/              # Database migration files
+│       ├── 001_create_base_tables.php  # Initial schema
+│       └── README.md            # Migration documentation
 ├── admin/                       # ✅ Admin area
 │   ├── index.php                # Modern dashboard with stats
+│   ├── content.php              # Content management
+│   ├── categories.php           # Hierarchical category management
 │   ├── users.php                # User management
-│   └── content.php              # Content management
+│   └── migrations.php           # Migration web interface (admin only)
 ├── assets/                      # ✅ Public assets
 │   ├── css/
 │   │   └── style.css            # Modern CSS with gradients & animations
@@ -165,7 +272,8 @@ pixarboy-site/                   # Repository root (deploys to public_html/)
 ├── post.php                     # Individual post view with Markdown
 ├── login.php                    # Beautiful login page
 ├── logout.php                   # Logout handler
-├── install.php                  # Database installer (delete after use!)
+├── migrate.php                  # CLI migration tool
+├── install.php                  # Legacy database installer (optional)
 ├── HOSTINGER_GIT_DEPLOY.md      # Git deployment guide (recommended)
 ├── DEPLOYMENT.md                # Manual deployment guide
 └── README.md                    # This file

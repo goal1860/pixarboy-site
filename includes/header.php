@@ -26,20 +26,22 @@
             
             <!-- Navigation Menu -->
             <ul class="nav-menu" id="navMenu">
-                <li><a href="<?php echo BASE_URL; ?>/" <?php echo (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == BASE_URL . '/' || $_SERVER['REQUEST_URI'] == BASE_URL . '/index.php') ? 'class="active"' : ''; ?>>Home</a></li>
+                <li><a href="/">Home</a></li>
                 
                 <?php if (isLoggedIn()): ?>
-                    <li><a href="<?php echo BASE_URL; ?>/admin/">Dashboard</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>/admin/content.php">Content</a></li>
+                    <li><a href="/admin/">Dashboard</a></li>
+                    <li><a href="/admin/content.php">Content</a></li>
+                    <li><a href="/admin/categories.php">Categories</a></li>
                     <?php if (isAdmin()): ?>
-                        <li><a href="<?php echo BASE_URL; ?>/admin/users.php">Users</a></li>
+                        <li><a href="/admin/users.php">Users</a></li>
+                        <li><a href="/admin/migrations.php">Migrations</a></li>
                     <?php endif; ?>
                     <li class="nav-user-item">
                         <span class="nav-username">👤 <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                        <a href="<?php echo BASE_URL; ?>/logout.php" class="nav-logout">Logout</a>
+                        <a href="/logout.php" class="nav-logout">Logout</a>
                     </li>
                 <?php else: ?>
-                    <li><a href="<?php echo BASE_URL; ?>/login.php" class="btn btn-gradient btn-sm nav-login-btn">Login</a></li>
+                    <li><a href="/login.php" class="btn btn-gradient btn-sm nav-login-btn">Login</a></li>
                 <?php endif; ?>
             </ul>
         </div>
