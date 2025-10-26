@@ -3,10 +3,11 @@
  * Migration: Create Base Tables
  * 
  * Creates the initial database structure:
- * - users table
- * - content table
- * - categories table (with hierarchy support)
- * - content_categories junction table
+ * - users table (for authors/admins)
+ * - content table (for reviews/articles)
+ * - products table (for affiliate products)
+ * - categories table (for product categories)
+ * - product_categories junction table (many-to-many)
  */
 class Migration_001_create_base_tables extends Migration {
     
@@ -70,26 +71,53 @@ class Migration_001_create_base_tables extends Migration {
             ", "Failed to create categories table");
         }
         
-        // Create content_categories junction table
-        if (!$this->tableExists('content_categories')) {
+        // Create products table
+        if (!$this->tableExists('products')) {
             $this->execute("
-                CREATE TABLE content_categories (
-                    content_id INT,
+                CREATE TABLE products (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    slug VARCHAR(255) UNIQUE NOT NULL,
+                    description TEXT,
+                    price DECIMAL(10, 2),
+                    currency VARCHAR(3) DEFAULT 'USD',
+                    affiliate_link VARCHAR(500),
+                    image_url VARCHAR(500),
+                    rating DECIMAL(2, 1) DEFAULT 0,
+                    status ENUM('active', 'inactive', 'out_of_stock') DEFAULT 'active',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_slug (slug),
+                    INDEX idx_status (status),
+                    INDEX idx_rating (rating)
+                )
+            ", "Failed to create products table");
+        }
+        
+        // Create product_categories junction table
+        if (!$this->tableExists('product_categories')) {
+            $this->execute("
+                CREATE TABLE product_categories (
+                    product_id INT,
                     category_id INT,
-                    PRIMARY KEY (content_id, category_id),
-                    FOREIGN KEY (content_id) REFERENCES content(id) ON DELETE CASCADE,
+                    PRIMARY KEY (product_id, category_id),
+                    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
                     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-                    INDEX idx_content (content_id),
+                    INDEX idx_product (product_id),
                     INDEX idx_category (category_id)
                 )
-            ", "Failed to create content_categories table");
+            ", "Failed to create product_categories table");
         }
     }
     
     public function down() {
         // Drop tables in reverse order (respecting foreign keys)
-        if ($this->tableExists('content_categories')) {
-            $this->execute("DROP TABLE content_categories");
+        if ($this->tableExists('product_categories')) {
+            $this->execute("DROP TABLE product_categories");
+        }
+        
+        if ($this->tableExists('products')) {
+            $this->execute("DROP TABLE products");
         }
         
         if ($this->tableExists('categories')) {
