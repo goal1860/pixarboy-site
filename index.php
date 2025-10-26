@@ -20,6 +20,20 @@ $remainingPosts = array_slice($allPosts, 1);
 // Get recent posts for sidebar
 $recentPosts = array_slice($allPosts, 0, 5);
 
+// Get featured products (top rated, active products)
+$stmt = $pdo->query("SELECT * FROM products 
+                      WHERE status = 'active' AND rating > 0
+                      ORDER BY rating DESC, created_at DESC 
+                      LIMIT 6");
+$featuredProducts = $stmt->fetchAll();
+
+// Get product categories for navigation
+$stmt = $pdo->query("SELECT * FROM categories 
+                      WHERE parent_id IS NULL 
+                      ORDER BY display_order, name 
+                      LIMIT 4");
+$topCategories = $stmt->fetchAll();
+
 $pageTitle = 'Home';
 include __DIR__ . '/includes/header.php';
 ?>
@@ -83,6 +97,118 @@ include __DIR__ . '/includes/header.php';
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Product Categories Section -->
+<?php if (!empty($topCategories)): ?>
+<section style="background: var(--background-light); padding: 3rem 0; margin: 2rem 0; border-radius: 12px;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">🛍️ Shop by Category</h2>
+            <p style="color: var(--text-light);">Explore our curated selection of products</p>
+        </div>
+        <div class="posts-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <?php foreach ($topCategories as $category): ?>
+                <a href="/category.php?slug=<?php echo urlencode($category['slug']); ?>" 
+                   class="card" 
+                   style="text-decoration: none; color: inherit; text-align: center; padding: 2rem; transition: all 0.3s ease;">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+                        <?php
+                        $icons = [
+                            'electronics' => '📱',
+                            'computers' => '💻',
+                            'smart-home' => '🏠',
+                            'gaming' => '🎮'
+                        ];
+                        echo $icons[$category['slug']] ?? '📦';
+                        ?>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;"><?php echo htmlspecialchars($category['name']); ?></h3>
+                    <?php if ($category['description']): ?>
+                        <p style="color: var(--text-light); font-size: 0.875rem; margin: 0;">
+                            <?php echo htmlspecialchars(substr($category['description'], 0, 60)) . '...'; ?>
+                        </p>
+                    <?php endif; ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Featured Products Section -->
+<?php if (!empty($featuredProducts)): ?>
+<section style="padding: 2rem 0;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">⭐ Top Rated Products</h2>
+            <p style="color: var(--text-light);">Check out our highest-rated product recommendations</p>
+        </div>
+        <div class="posts-grid">
+            <?php foreach ($featuredProducts as $product): ?>
+                <article class="post-card product-card">
+                    <?php if ($product['image_url']): ?>
+                        <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>" class="post-image">
+                            <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
+                                 alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        </a>
+                    <?php else: ?>
+                        <div class="post-image" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
+                            <?php echo strtoupper(substr($product['name'], 0, 2)); ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <div class="post-body">
+                        <?php if ($product['rating'] > 0): ?>
+                            <div style="display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.5rem;">
+                                <span style="color: #fbbf24;">⭐</span>
+                                <strong><?php echo number_format($product['rating'], 1); ?></strong>
+                                <span style="color: var(--text-light); font-size: 0.875rem;">/ 5.0</span>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <h3 class="post-title">
+                            <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>">
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </a>
+                        </h3>
+                        
+                        <?php if ($product['description']): ?>
+                            <p class="post-excerpt">
+                                <?php echo htmlspecialchars(substr(strip_tags($product['description']), 0, 100)) . '...'; ?>
+                            </p>
+                        <?php endif; ?>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <?php if ($product['price']): ?>
+                                <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color);">
+                                    <?php echo htmlspecialchars($product['currency']); ?> <?php echo number_format($product['price'], 2); ?>
+                                </div>
+                            <?php else: ?>
+                                <div></div>
+                            <?php endif; ?>
+                            
+                            <?php if ($product['affiliate_link']): ?>
+                                <a href="<?php echo htmlspecialchars($product['affiliate_link']); ?>" 
+                                   class="btn btn-gradient btn-sm" 
+                                   target="_blank" 
+                                   rel="nofollow noopener"
+                                   onclick="event.stopPropagation();">
+                                    Buy Now
+                                </a>
+                            <?php else: ?>
+                                <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>" 
+                                   class="btn btn-primary btn-sm">
+                                    View Details
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </article>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

@@ -14,16 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content = $_POST['content']; // Don't sanitize content - allow HTML
         $excerpt = sanitize($_POST['excerpt']);
         $status = $_POST['status'];
+        $productId = !empty($_POST['product_id']) ? $_POST['product_id'] : null;
         $authorId = $_SESSION['user_id'];
         
         try {
             if ($action === 'new') {
-                $stmt = $pdo->prepare("INSERT INTO content (title, slug, content, excerpt, status, author_id) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $slug, $content, $excerpt, $status, $authorId]);
+                $stmt = $pdo->prepare("INSERT INTO content (title, slug, content, excerpt, status, author_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$title, $slug, $content, $excerpt, $status, $authorId, $productId]);
                 showMessage('Content created successfully!', 'success');
             } else {
-                $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, status=? WHERE id=?");
-                $stmt->execute([$title, $slug, $content, $excerpt, $status, $contentId]);
+                $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, status=?, product_id=? WHERE id=?");
+                $stmt->execute([$title, $slug, $content, $excerpt, $status, $productId, $contentId]);
                 showMessage('Content updated successfully!', 'success');
             }
             redirect('/admin/content.php');
@@ -53,11 +54,16 @@ if ($action === 'edit' && $contentId) {
 
 // Get all content
 if ($action === 'list') {
-    $stmt = $pdo->query("SELECT c.*, u.username as author FROM content c 
+    $stmt = $pdo->query("SELECT c.*, u.username as author, p.name as product_name FROM content c 
                          LEFT JOIN users u ON c.author_id = u.id 
+                         LEFT JOIN products p ON c.product_id = p.id
                          ORDER BY c.created_at DESC");
     $contentList = $stmt->fetchAll();
 }
+
+// Get all products for the dropdown
+$stmt = $pdo->query("SELECT id, name FROM products WHERE status = 'active' ORDER BY name");
+$allProducts = $stmt->fetchAll();
 
 $pageTitle = ucfirst($action) . ' Content';
 include __DIR__ . '/../includes/header.php';
@@ -92,6 +98,7 @@ include __DIR__ . '/../includes/header.php';
                         <tr>
                             <th>Title</th>
                             <th>Author</th>
+                            <th>Product</th>
                             <th>Status</th>
                             <th>Created</th>
                             <th>Updated</th>
@@ -107,6 +114,13 @@ include __DIR__ . '/../includes/header.php';
                                 <small style="color: var(--text-light);">/<?php echo htmlspecialchars($c['slug']); ?></small>
                             </td>
                             <td><?php echo htmlspecialchars($c['author']); ?></td>
+                            <td>
+                                <?php if ($c['product_name']): ?>
+                                    <span class="badge badge-info"><?php echo htmlspecialchars($c['product_name']); ?></span>
+                                <?php else: ?>
+                                    <span style="color: var(--text-light);">—</span>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <span class="badge badge-<?php 
                                     echo $c['status'] === 'published' ? 'success' : 
@@ -198,6 +212,25 @@ include __DIR__ . '/../includes/header.php';
                     placeholder="A brief summary that will appear in listings and search results..."
                 ><?php echo isset($item) ? htmlspecialchars($item['excerpt']) : ''; ?></textarea>
                 <small style="color: var(--text-light);">Optional short description (recommended for better engagement)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="product_id">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                    </svg>
+                    Linked Product
+                </label>
+                <select id="product_id" name="product_id" class="form-control">
+                    <option value="">— No Product —</option>
+                    <?php foreach ($allProducts as $product): ?>
+                        <option value="<?php echo $product['id']; ?>" 
+                                <?php echo (isset($item) && $item['product_id'] == $product['id']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($product['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small style="color: var(--text-light);">Optional: Link this content to a product review</small>
             </div>
             
             <div class="form-group">

@@ -31,6 +31,7 @@
                 <?php if (isLoggedIn()): ?>
                     <li><a href="/admin/">Dashboard</a></li>
                     <li><a href="/admin/content.php">Content</a></li>
+                    <li><a href="/admin/products.php">Products</a></li>
                     <li><a href="/admin/categories.php">Categories</a></li>
                     <?php if (isAdmin()): ?>
                         <li><a href="/admin/users.php">Users</a></li>
