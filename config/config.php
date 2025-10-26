@@ -3,8 +3,8 @@
 session_start();
 
 // Site Configuration - Update these for your Hostinger deployment
-define('SITE_NAME', 'PixarBoy CMS');
-define('BASE_URL', 'http://localhost'); // Change to: https://yourdomain.com
+define('SITE_NAME', 'PixarBoy');
+define('BASE_URL', 'http://localhost'); // IMPORTANT: Change to https://yourdomain.com for production
 define('ADMIN_EMAIL', 'admin@pixarboy.com');
 
 // Include database configuration

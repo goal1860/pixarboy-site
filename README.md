@@ -1,4 +1,4 @@
-# PixarBoy CMS
+# PixarBoy
 
 A beautiful, modern Content Management System built with PHP and MySQL, featuring a clean design inspired by contemporary web aesthetics.
 

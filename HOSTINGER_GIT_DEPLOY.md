@@ -64,14 +64,16 @@ Directory (optional):
    define('DB_PASS', 'your_password_here');       // Your password
    ```
 
-3. **Update Site Configuration**
+3. **Update Site Configuration** ⚠️ **CRITICAL**
    
-   Edit `public_html/config/config.php`:
+   Edit `public_html/config/config.php` and update BASE_URL with your actual domain:
    ```php
-   define('BASE_URL', 'https://yourdomain.com'); // Your actual domain
-   define('SITE_NAME', 'Your Site Name');
+   define('SITE_NAME', 'PixarBoy');
+   define('BASE_URL', 'https://yourdomain.com'); // ⚠️ MUST CHANGE! No trailing slash!
    define('ADMIN_EMAIL', 'your@email.com');
    ```
+   
+   **Warning:** If you don't change `BASE_URL` from `http://localhost`, all links and redirects (including login) will go to localhost instead of your domain!
 
 ### 5. Run Installation
 
@@ -210,6 +212,18 @@ Hostinger public_html/
 2. Check if mod_rewrite is enabled (usually is on Hostinger)
 3. Try accessing: `https://yourdomain.com/config/` - should show 403 Forbidden
 
+### Issue: Login Redirects to Localhost
+
+**Cause:** BASE_URL not updated from default
+
+**Fix:**
+1. Edit `config/config.php`
+2. Change from `http://localhost` to your actual domain:
+   ```php
+   define('BASE_URL', 'https://yourdomain.com'); // NO trailing slash!
+   ```
+3. Save and test login again
+
 ### Issue: CSS/JS Not Loading
 
 **Cause:** Wrong BASE_URL
@@ -296,7 +310,7 @@ config/database.php: 640 (more secure)
 - [ ] `install.php` deleted
 - [ ] Admin password changed
 - [ ] HTTPS enabled (`.htaccess` uncommented)
-- [ ] `BASE_URL` updated in `config/config.php`
+- [ ] **⚠️ BASE_URL** updated from localhost to your domain in `config/config.php`
 - [ ] Can login to admin panel
 - [ ] Can create/edit/delete posts
 - [ ] CSS/JS loading correctly
@@ -318,7 +332,7 @@ config/database.php: 640 (more secure)
 
 ---
 
-**Congratulations!** Your PixarBoy CMS is now deployed via Hostinger Git! 🎊
+**Congratulations!** Your PixarBoy is now deployed via Hostinger Git! 🎊
 
 Deployment URL: `https://yourdomain.com`  
 Admin Panel: `https://yourdomain.com/admin/`

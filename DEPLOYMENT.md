@@ -1,6 +1,6 @@
 # Hostinger Deployment Guide
 
-Complete guide to deploy PixarBoy CMS to Hostinger shared hosting.
+Complete guide to deploy PixarBoy to Hostinger shared hosting.
 
 ## 📋 Prerequisites
 
@@ -150,12 +150,14 @@ Complete guide to deploy PixarBoy CMS to Hostinger shared hosting.
 
 ### Step 4: Update Configuration
 
-1. **Edit config/config.php**
+1. **Edit config/config.php** ⚠️ **CRITICAL**
    ```php
-   define('SITE_NAME', 'Your Site Name');
-   define('BASE_URL', 'https://yourdomain.com'); // NO trailing slash
+   define('SITE_NAME', 'PixarBoy');
+   define('BASE_URL', 'https://yourdomain.com'); // ⚠️ MUST CHANGE from localhost! NO trailing slash
    define('ADMIN_EMAIL', 'your@email.com');
    ```
+   
+   **Warning:** If you don't update `BASE_URL` from `http://localhost`, all links and redirects (including login) will go to localhost!
 
 2. **Enable HTTPS (in public_html/.htaccess)**
    - Uncomment these lines:
@@ -194,7 +196,7 @@ Complete guide to deploy PixarBoy CMS to Hostinger shared hosting.
 - [ ] Delete `install.php`
 - [ ] Verify `config/database.php` permissions (644 or 640)
 - [ ] Enable HTTPS redirect in `.htaccess`
-- [ ] Update `BASE_URL` to use `https://`
+- [ ] **⚠️ Update `BASE_URL`** from localhost to `https://yourdomain.com`
 
 ✅ **Recommended:**
 - [ ] Set up automatic backups in hPanel
@@ -255,6 +257,16 @@ Complete guide to deploy PixarBoy CMS to Hostinger shared hosting.
 1. **Check .htaccess** is uploaded
 2. **Verify mod_rewrite** is enabled (usually is on Hostinger)
 3. **Check file paths** in config.php
+
+### Login Redirects to Localhost
+
+**Fix:**
+1. Edit `config/config.php`
+2. Change `BASE_URL` from `http://localhost` to your actual domain:
+   ```php
+   define('BASE_URL', 'https://yourdomain.com'); // NO trailing slash!
+   ```
+3. Save and clear browser cache
 
 ### CSS/JS Not Loading
 
@@ -405,7 +417,7 @@ git pull origin main
 
 ---
 
-**Congratulations! Your PixarBoy CMS is now live on Hostinger! 🎊**
+**Congratulations! Your PixarBoy is now live on Hostinger! 🎊**
 
 For questions or issues, check the GitHub repository: https://github.com/goal1860/pixarboy-site
 

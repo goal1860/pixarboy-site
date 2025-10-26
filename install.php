@@ -61,7 +61,7 @@ try {
     echo "<!DOCTYPE html>
 <html>
 <head>
-    <title>Installation Complete - PixarBoy CMS</title>
+    <title>Installation Complete - PixarBoy</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
         .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 5px; }
