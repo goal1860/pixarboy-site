@@ -1,2 +1,56 @@
-.venv/
+# PixarBoy CMS - Git Ignore
+
+# Database Configuration (NEVER commit this)
+config/database.php
+
+# Temporary files
 tmp/
+*.tmp
+*.log
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS Files
+Thumbs.db
+desktop.ini
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# User uploaded content (if you add file uploads later)
+public_html/uploads/*
+!public_html/uploads/.gitkeep
+
+# Cache files
+*.cache
+cache/
+
+# Backup files
+*.bak
+*.backup
+*.sql
+
+# Node modules (if you add any frontend build tools)
+node_modules/
+package-lock.json
+
+# Composer (if you add PHP dependencies)
+vendor/
+composer.lock
+
+# Session files
+sessions/
+
+# Python virtual environment (from our temporary script)
+.venv/
+
+# Temporary deployment files
+deploy/

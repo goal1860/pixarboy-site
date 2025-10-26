@@ -61,7 +61,20 @@ A beautiful, modern Content Management System built with PHP and MySQL, featurin
 
 ## Installation
 
-### 1. Install the Database
+### Local Development
+
+### 1. Configure Database
+
+Copy `config/database.example.php` to `config/database.php` and update with your credentials:
+
+```php
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'pixarboy_cms');
+define('DB_USER', 'your_username');
+define('DB_PASS', 'your_password');
+```
+
+### 2. Install the Database
 
 Visit: `http://localhost/install.php`
 
@@ -120,32 +133,43 @@ rm public/install.php
 
 ## File Structure
 
+### Hostinger-Ready Structure
+
 ```
-pixarboy/
-├── public/
-│   ├── assets/
-│   │   ├── css/
-│   │   │   └── style.css         # Modern CSS with gradients & animations
-│   │   ├── js/
-│   │   │   └── main.js          # Interactive JavaScript features
-│   │   └── images/              # Image assets
+pixarboy-site/
+├── config/                      # Secure - Above web root
+│   ├── config.php               # App configuration
+│   ├── database.php             # Database connection (NOT in git)
+│   └── database.example.php     # Example database config
+├── includes/                    # Secure - Above web root
+│   ├── header.php               # Modern navigation header
+│   ├── footer.php               # Enhanced footer with sections
+│   └── Parsedown.php            # Markdown parser
+├── public_html/                 # WEB ROOT - Maps to Hostinger's public_html
 │   ├── admin/
 │   │   ├── index.php            # Modern dashboard with stats
 │   │   ├── users.php            # User management
 │   │   └── content.php          # Content management
-│   ├── index.php                # Homepage with hero section
-│   ├── post.php                 # Individual post view
-│   ├── login.php                # Beautiful login page
-│   ├── logout.php               # Logout handler
-│   └── install.php              # Database installer
-├── includes/
-│   ├── header.php               # Modern navigation header
-│   └── footer.php               # Enhanced footer with sections
-├── config/
-│   ├── config.php               # App configuration
-│   └── database.php             # Database connection
-└── README.md                    # This file
+│   ├── assets/
+│   │   ├── css/
+│   │   │   └── style.css        # Modern CSS with gradients & animations
+│   │   ├── js/
+│   │   │   └── main.js         # Interactive JavaScript features
+│   │   └── images/
+│   │       └── airpods-4-hero.svg  # Custom SVG illustrations
+│   ├── .htaccess               # Security and routing
+│   ├── index.php               # Homepage with hero section & sidebar
+│   ├── post.php                # Individual post view with Markdown
+│   ├── login.php               # Beautiful login page
+│   ├── logout.php              # Logout handler
+│   └── install.php             # Database installer
+├── .htaccess                   # Root protection
+├── .gitignore                  # Git ignore rules
+├── DEPLOYMENT.md               # Hostinger deployment guide
+└── README.md                   # This file
 ```
+
+**Security Note:** The `config/` and `includes/` directories are kept outside `public_html` for security. Only `public_html/` contents are web-accessible.
 
 ## Design Features
 
@@ -272,8 +296,23 @@ Edit CSS variables in `public/assets/css/style.css`:
 - ✅ Safari (latest)
 - ✅ Mobile browsers (iOS Safari, Chrome Mobile)
 
-### Local Development with Laradock
-This project is configured to work with Laradock. The document root points to `/var/www/pixarboy/public`.
+### Hostinger Deployment
+
+For complete deployment instructions to Hostinger shared hosting, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+
+Quick steps:
+1. Upload `config/` and `includes/` to root directory
+2. Upload `public_html/` contents to Hostinger's `public_html/`
+3. Copy `database.example.php` to `database.php` and configure
+4. Run `/install.php` once
+5. Delete `install.php`
+
+### Local Development
+
+This project works with any PHP development environment:
+- **XAMPP/MAMP**: Place project in htdocs, point to `public_html/`
+- **PHP Built-in**: `cd public_html && php -S localhost:8000`
+- **Laradock/Docker**: Configure document root to `public_html/`
 
 ## Responsive Breakpoints
 
