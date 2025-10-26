@@ -92,7 +92,7 @@ include __DIR__ . '/includes/header.php';
             // Check for specific post images
             $imagePath = null;
             if ($post['slug'] === 'apple-airpods-4-review') {
-                $imagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                $imagePath = '/assets/images/airpods-4-hero.svg';
             }
             
             if ($imagePath): ?>
@@ -115,15 +115,18 @@ include __DIR__ . '/includes/header.php';
                 <div>
                     <h4 style="margin-bottom: 0.5rem;">Share this post</h4>
                     <div style="display: flex; gap: 0.75rem;">
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(BASE_URL . '/post.php?slug=' . $post['slug']); ?>&text=<?php echo urlencode($post['title']); ?>" target="_blank" class="btn btn-sm btn-primary">Twitter</a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BASE_URL . '/post.php?slug=' . $post['slug']); ?>" target="_blank" class="btn btn-sm btn-secondary">Facebook</a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode(BASE_URL . '/post.php?slug=' . $post['slug']); ?>&title=<?php echo urlencode($post['title']); ?>" target="_blank" class="btn btn-sm btn-secondary">LinkedIn</a>
+                        <?php 
+                        $fullUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/post.php?slug=" . $post['slug'];
+                        ?>
+                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($fullUrl); ?>&text=<?php echo urlencode($post['title']); ?>" target="_blank" class="btn btn-sm btn-primary">Twitter</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($fullUrl); ?>" target="_blank" class="btn btn-sm btn-secondary">Facebook</a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($fullUrl); ?>&title=<?php echo urlencode($post['title']); ?>" target="_blank" class="btn btn-sm btn-secondary">LinkedIn</a>
                     </div>
                 </div>
                 
                 <?php if (isLoggedIn() && (isAdmin() || $_SESSION['user_id'] == $post['author_id'])): ?>
                     <div>
-                        <a href="<?php echo BASE_URL; ?>/admin/content.php?edit=<?php echo $post['id']; ?>" class="btn btn-sm btn-secondary">Edit Post</a>
+                        <a href="/admin/content.php?edit=<?php echo $post['id']; ?>" class="btn btn-sm btn-secondary">Edit Post</a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -141,7 +144,7 @@ include __DIR__ . '/includes/header.php';
                                 // Check for specific post images
                                 $relatedImagePath = null;
                                 if ($relatedPost['slug'] === 'apple-airpods-4-review') {
-                                    $relatedImagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                                    $relatedImagePath = '/assets/images/airpods-4-hero.svg';
                                 }
                                 
                                 if ($relatedImagePath): ?>
@@ -157,7 +160,7 @@ include __DIR__ . '/includes/header.php';
                                     <span>📅 <?php echo date('M j, Y', strtotime($relatedPost['created_at'])); ?></span>
                                 </div>
                                 <h3 class="post-card-title">
-                                    <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($relatedPost['slug']); ?>">
+                                    <a href="/post.php?slug=<?php echo urlencode($relatedPost['slug']); ?>">
                                         <?php echo htmlspecialchars($relatedPost['title']); ?>
                                     </a>
                                 </h3>
@@ -178,7 +181,7 @@ include __DIR__ . '/includes/header.php';
                                         </div>
                                         <span class="post-author-name"><?php echo htmlspecialchars($relatedPost['author']); ?></span>
                                     </div>
-                                    <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($relatedPost['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
+                                        <a href="/post.php?slug=<?php echo urlencode($relatedPost['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
                                 </div>
                             </div>
                         </article>
@@ -189,7 +192,7 @@ include __DIR__ . '/includes/header.php';
         
         <!-- Back to Home -->
         <div style="text-align: center; margin-top: 3rem;">
-            <a href="<?php echo BASE_URL; ?>/" class="btn btn-outline">← Back to Home</a>
+            <a href="/" class="btn btn-outline">← Back to Home</a>
         </div>
         
     </div>

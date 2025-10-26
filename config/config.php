@@ -2,9 +2,9 @@
 // Application Configuration
 session_start();
 
-// Site Configuration - Update these for your Hostinger deployment
+// Site Configuration
 define('SITE_NAME', 'PixarBoy');
-define('BASE_URL', 'http://localhost'); // IMPORTANT: Change to https://yourdomain.com for production
+define('BASE_URL', ''); // Use empty string for relative paths (recommended) or set to your domain
 define('ADMIN_EMAIL', 'admin@pixarboy.com');
 
 // Include database configuration
@@ -12,7 +12,8 @@ require_once __DIR__ . '/database.php';
 
 // Helper Functions
 function redirect($url) {
-    header("Location: " . BASE_URL . $url);
+    // Use relative paths - no BASE_URL dependency
+    header("Location: " . $url);
     exit();
 }
 

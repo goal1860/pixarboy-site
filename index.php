@@ -33,7 +33,7 @@ include __DIR__ . '/includes/header.php';
                 <?php 
                 $heroImagePath = null;
                 if ($featuredPost['slug'] === 'apple-airpods-4-review') {
-                    $heroImagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                    $heroImagePath = '/assets/images/airpods-4-hero.svg';
                 }
                 
                 if ($heroImagePath): ?>
@@ -53,7 +53,7 @@ include __DIR__ . '/includes/header.php';
             <div class="featured-hero-text">
                 <span class="featured-category">Latest Review</span>
                 <h1 class="featured-title">
-                    <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($featuredPost['slug']); ?>">
+                    <a href="/post.php?slug=<?php echo urlencode($featuredPost['slug']); ?>">
                         <?php echo htmlspecialchars($featuredPost['title']); ?>
                     </a>
                 </h1>
@@ -75,7 +75,7 @@ include __DIR__ . '/includes/header.php';
                         </div>
                     </div>
                     
-                    <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-gradient">
+                    <a href="/post.php?slug=<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-gradient">
                         Read Full Review
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-left: 5px;">
                             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -103,9 +103,9 @@ include __DIR__ . '/includes/header.php';
                         <h3>No Content Yet</h3>
                         <p>There are no published posts yet. Be the first to create something amazing!</p>
                         <?php if (isLoggedIn()): ?>
-                            <a href="<?php echo BASE_URL; ?>/admin/content.php" class="btn btn-primary">Create Your First Post</a>
+                            <a href="/admin/content.php" class="btn btn-primary">Create Your First Post</a>
                         <?php else: ?>
-                            <a href="<?php echo BASE_URL; ?>/login.php" class="btn btn-primary">Login to Create</a>
+                            <a href="/login.php" class="btn btn-primary">Login to Create</a>
                         <?php endif; ?>
                     </div>
                     
@@ -137,7 +137,7 @@ include __DIR__ . '/includes/header.php';
                                     <?php 
                                     $cardImagePath = null;
                                     if ($post['slug'] === 'apple-airpods-4-review') {
-                                        $cardImagePath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                                        $cardImagePath = '/assets/images/airpods-4-hero.svg';
                                     }
                                     
                                     if ($cardImagePath): ?>
@@ -155,7 +155,7 @@ include __DIR__ . '/includes/header.php';
                                     </div>
                                     
                                     <h3 class="post-card-title">
-                                        <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($post['slug']); ?>">
+                                        <a href="/post.php?slug=<?php echo urlencode($post['slug']); ?>">
                                             <?php echo htmlspecialchars($post['title']); ?>
                                         </a>
                                     </h3>
@@ -178,7 +178,7 @@ include __DIR__ . '/includes/header.php';
                                             </div>
                                             <span class="post-author-name"><?php echo htmlspecialchars($post['author']); ?></span>
                                         </div>
-                                        <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($post['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
+                                        <a href="/post.php?slug=<?php echo urlencode($post['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
                                     </div>
                                 </div>
                             </article>
@@ -240,7 +240,7 @@ include __DIR__ . '/includes/header.php';
                                 <?php 
                                 $thumbPath = null;
                                 if ($recent['slug'] === 'apple-airpods-4-review') {
-                                    $thumbPath = BASE_URL . '/assets/images/airpods-4-hero.svg';
+                                    $thumbPath = '/assets/images/airpods-4-hero.svg';
                                 }
                                 
                                 if ($thumbPath): ?>
@@ -253,7 +253,7 @@ include __DIR__ . '/includes/header.php';
                             </div>
                             <div class="recent-post-content">
                                 <h4>
-                                    <a href="<?php echo BASE_URL; ?>/post.php?slug=<?php echo urlencode($recent['slug']); ?>">
+                                    <a href="/post.php?slug=<?php echo urlencode($recent['slug']); ?>">
                                         <?php echo htmlspecialchars(substr($recent['title'], 0, 50)) . (strlen($recent['title']) > 50 ? '...' : ''); ?>
                                     </a>
                                 </h4>
