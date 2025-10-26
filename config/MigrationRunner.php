@@ -99,22 +99,34 @@ class MigrationRunner {
                 
                 echo "Migrating: {$migration->getName()}... ";
                 
+                // Note: DDL statements (CREATE TABLE, ALTER TABLE) cause implicit commits in MySQL
+                // So we can't truly rollback schema changes, but we track them anyway
                 $this->pdo->beginTransaction();
-                $migration->up();
                 
-                // Record migration
-                $stmt = $this->pdo->prepare("INSERT INTO migrations (migration, batch) VALUES (?, ?)");
-                $stmt->execute([$migrationName, $batch]);
-                
-                $this->pdo->commit();
-                
-                $ran[] = $migration->getName();
-                echo "✓ DONE\n";
+                try {
+                    $migration->up();
+                    
+                    // Record migration (this needs to be tracked even if DDL committed)
+                    $stmt = $this->pdo->prepare("INSERT INTO migrations (migration, batch) VALUES (?, ?)");
+                    $stmt->execute([$migrationName, $batch]);
+                    
+                    // Commit if transaction is still active (might not be after DDL)
+                    if ($this->pdo->inTransaction()) {
+                        $this->pdo->commit();
+                    }
+                    
+                    $ran[] = $migration->getName();
+                    echo "✓ DONE\n";
+                    
+                } catch (Exception $e) {
+                    // Rollback if transaction is still active
+                    if ($this->pdo->inTransaction()) {
+                        $this->pdo->rollBack();
+                    }
+                    throw $e;
+                }
                 
             } catch (Exception $e) {
-                if ($this->pdo->inTransaction()) {
-                    $this->pdo->rollBack();
-                }
                 echo "✗ FAILED\n";
                 throw new Exception("Migration '{$migrationName}' failed: " . $e->getMessage());
             }
@@ -154,21 +166,30 @@ class MigrationRunner {
                 echo "Rolling back: {$migration->getName()}... ";
                 
                 $this->pdo->beginTransaction();
-                $migration->down();
                 
-                // Remove migration record
-                $stmt = $this->pdo->prepare("DELETE FROM migrations WHERE migration = ?");
-                $stmt->execute([$migrationName]);
-                
-                $this->pdo->commit();
-                
-                $rolledBack[] = $migration->getName();
-                echo "✓ DONE\n";
+                try {
+                    $migration->down();
+                    
+                    // Remove migration record
+                    $stmt = $this->pdo->prepare("DELETE FROM migrations WHERE migration = ?");
+                    $stmt->execute([$migrationName]);
+                    
+                    // Commit if transaction is still active
+                    if ($this->pdo->inTransaction()) {
+                        $this->pdo->commit();
+                    }
+                    
+                    $rolledBack[] = $migration->getName();
+                    echo "✓ DONE\n";
+                    
+                } catch (Exception $e) {
+                    if ($this->pdo->inTransaction()) {
+                        $this->pdo->rollBack();
+                    }
+                    throw $e;
+                }
                 
             } catch (Exception $e) {
-                if ($this->pdo->inTransaction()) {
-                    $this->pdo->rollBack();
-                }
                 echo "✗ FAILED\n";
                 throw new Exception("Rollback of '{$migrationName}' failed: " . $e->getMessage());
             }
