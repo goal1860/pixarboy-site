@@ -1,13 +1,14 @@
 <?php
 /**
- * Migration: Seed Default Categories
+ * Migration: Seed Default Product Categories
  * 
- * Populates the categories table with default hierarchical categories
+ * Populates the categories table with default hierarchical product categories
+ * for an affiliate review site
  */
 class Migration_003_seed_default_categories extends Migration {
     
     public function getName() {
-        return 'Seed Default Categories';
+        return 'Seed Default Product Categories';
     }
     
     public function up() {
@@ -18,11 +19,12 @@ class Migration_003_seed_default_categories extends Migration {
             return;
         }
         
-        // Default top-level categories
+        // Default top-level product categories
         $defaultCategories = [
-            ['name' => 'Reviews', 'slug' => 'reviews', 'description' => 'Product reviews and comparisons', 'parent_id' => null, 'order' => 1],
-            ['name' => 'Tech', 'slug' => 'tech', 'description' => 'Technology news and updates', 'parent_id' => null, 'order' => 2],
-            ['name' => 'Guides', 'slug' => 'guides', 'description' => 'How-to guides and tutorials', 'parent_id' => null, 'order' => 3],
+            ['name' => 'Electronics', 'slug' => 'electronics', 'description' => 'Electronic devices and gadgets', 'parent_id' => null, 'order' => 1],
+            ['name' => 'Computers', 'slug' => 'computers', 'description' => 'Computers and accessories', 'parent_id' => null, 'order' => 2],
+            ['name' => 'Smart Home', 'slug' => 'smart-home', 'description' => 'Smart home devices and automation', 'parent_id' => null, 'order' => 3],
+            ['name' => 'Gaming', 'slug' => 'gaming', 'description' => 'Gaming consoles, accessories, and peripherals', 'parent_id' => null, 'order' => 4],
         ];
         
         $stmt = $this->pdo->prepare("
@@ -44,16 +46,16 @@ class Migration_003_seed_default_categories extends Migration {
             $insertedIds[$cat['slug']] = $this->pdo->lastInsertId();
         }
         
-        // Add subcategories under Reviews
-        $reviewsId = $insertedIds['reviews'];
-        $subCategories = [
-            ['name' => 'Audio', 'slug' => 'audio', 'description' => 'Headphones, speakers, and audio equipment reviews', 'parent_id' => $reviewsId, 'order' => 1],
-            ['name' => 'Mobile', 'slug' => 'mobile', 'description' => 'Smartphones and mobile device reviews', 'parent_id' => $reviewsId, 'order' => 2],
-            ['name' => 'Laptops', 'slug' => 'laptops', 'description' => 'Laptop and notebook reviews', 'parent_id' => $reviewsId, 'order' => 3],
-            ['name' => 'Wearables', 'slug' => 'wearables', 'description' => 'Smartwatches and wearable tech reviews', 'parent_id' => $reviewsId, 'order' => 4],
+        // Electronics subcategories
+        $electronicsId = $insertedIds['electronics'];
+        $electronicsSubCategories = [
+            ['name' => 'Audio', 'slug' => 'audio', 'description' => 'Headphones, earbuds, speakers, and audio equipment', 'parent_id' => $electronicsId, 'order' => 1],
+            ['name' => 'Mobile Devices', 'slug' => 'mobile-devices', 'description' => 'Smartphones, tablets, and mobile accessories', 'parent_id' => $electronicsId, 'order' => 2],
+            ['name' => 'Wearables', 'slug' => 'wearables', 'description' => 'Smartwatches, fitness trackers, and wearable tech', 'parent_id' => $electronicsId, 'order' => 3],
+            ['name' => 'Cameras', 'slug' => 'cameras', 'description' => 'Digital cameras, action cams, and photography gear', 'parent_id' => $electronicsId, 'order' => 4],
         ];
         
-        foreach ($subCategories as $cat) {
+        foreach ($electronicsSubCategories as $cat) {
             $stmt->execute([
                 $cat['name'], 
                 $cat['slug'], 
@@ -63,14 +65,16 @@ class Migration_003_seed_default_categories extends Migration {
             ]);
         }
         
-        // Add subcategories under Tech
-        $techId = $insertedIds['tech'];
-        $techSubCategories = [
-            ['name' => 'News', 'slug' => 'tech-news', 'description' => 'Latest technology news and announcements', 'parent_id' => $techId, 'order' => 1],
-            ['name' => 'Industry', 'slug' => 'tech-industry', 'description' => 'Tech industry insights and analysis', 'parent_id' => $techId, 'order' => 2],
+        // Computers subcategories
+        $computersId = $insertedIds['computers'];
+        $computersSubCategories = [
+            ['name' => 'Laptops', 'slug' => 'laptops', 'description' => 'Laptops, notebooks, and portable computers', 'parent_id' => $computersId, 'order' => 1],
+            ['name' => 'Desktops', 'slug' => 'desktops', 'description' => 'Desktop computers and workstations', 'parent_id' => $computersId, 'order' => 2],
+            ['name' => 'Monitors', 'slug' => 'monitors', 'description' => 'Computer monitors and displays', 'parent_id' => $computersId, 'order' => 3],
+            ['name' => 'Accessories', 'slug' => 'computer-accessories', 'description' => 'Keyboards, mice, and computer peripherals', 'parent_id' => $computersId, 'order' => 4],
         ];
         
-        foreach ($techSubCategories as $cat) {
+        foreach ($computersSubCategories as $cat) {
             $stmt->execute([
                 $cat['name'], 
                 $cat['slug'], 
@@ -80,15 +84,34 @@ class Migration_003_seed_default_categories extends Migration {
             ]);
         }
         
-        // Add subcategories under Guides
-        $guidesId = $insertedIds['guides'];
-        $guidesSubCategories = [
-            ['name' => 'Tutorials', 'slug' => 'tutorials', 'description' => 'Step-by-step tutorials and how-tos', 'parent_id' => $guidesId, 'order' => 1],
-            ['name' => 'Tips & Tricks', 'slug' => 'tips-tricks', 'description' => 'Helpful tips and tricks', 'parent_id' => $guidesId, 'order' => 2],
-            ['name' => 'Buying Guides', 'slug' => 'buying-guides', 'description' => 'Product buying guides and recommendations', 'parent_id' => $guidesId, 'order' => 3],
+        // Smart Home subcategories
+        $smartHomeId = $insertedIds['smart-home'];
+        $smartHomeSubCategories = [
+            ['name' => 'Smart Speakers', 'slug' => 'smart-speakers', 'description' => 'Smart speakers and voice assistants', 'parent_id' => $smartHomeId, 'order' => 1],
+            ['name' => 'Security', 'slug' => 'home-security', 'description' => 'Smart locks, cameras, and security systems', 'parent_id' => $smartHomeId, 'order' => 2],
+            ['name' => 'Lighting', 'slug' => 'smart-lighting', 'description' => 'Smart bulbs and lighting systems', 'parent_id' => $smartHomeId, 'order' => 3],
         ];
         
-        foreach ($guidesSubCategories as $cat) {
+        foreach ($smartHomeSubCategories as $cat) {
+            $stmt->execute([
+                $cat['name'], 
+                $cat['slug'], 
+                $cat['description'], 
+                $cat['parent_id'], 
+                $cat['order']
+            ]);
+        }
+        
+        // Gaming subcategories
+        $gamingId = $insertedIds['gaming'];
+        $gamingSubCategories = [
+            ['name' => 'Consoles', 'slug' => 'gaming-consoles', 'description' => 'PlayStation, Xbox, Nintendo, and gaming consoles', 'parent_id' => $gamingId, 'order' => 1],
+            ['name' => 'PC Gaming', 'slug' => 'pc-gaming', 'description' => 'Gaming PCs, graphics cards, and components', 'parent_id' => $gamingId, 'order' => 2],
+            ['name' => 'Controllers', 'slug' => 'gaming-controllers', 'description' => 'Gaming controllers and input devices', 'parent_id' => $gamingId, 'order' => 3],
+            ['name' => 'Headsets', 'slug' => 'gaming-headsets', 'description' => 'Gaming headsets and audio', 'parent_id' => $gamingId, 'order' => 4],
+        ];
+        
+        foreach ($gamingSubCategories as $cat) {
             $stmt->execute([
                 $cat['name'], 
                 $cat['slug'], 
@@ -104,13 +127,15 @@ class Migration_003_seed_default_categories extends Migration {
         // This will only remove the categories we added, not user-created ones
         $slugsToRemove = [
             // Top level
-            'reviews', 'tech', 'guides',
-            // Reviews subcategories
-            'audio', 'mobile', 'laptops', 'wearables',
-            // Tech subcategories
-            'tech-news', 'tech-industry',
-            // Guides subcategories
-            'tutorials', 'tips-tricks', 'buying-guides'
+            'electronics', 'computers', 'smart-home', 'gaming',
+            // Electronics subcategories
+            'audio', 'mobile-devices', 'wearables', 'cameras',
+            // Computers subcategories
+            'laptops', 'desktops', 'monitors', 'computer-accessories',
+            // Smart Home subcategories
+            'smart-speakers', 'home-security', 'smart-lighting',
+            // Gaming subcategories
+            'gaming-consoles', 'pc-gaming', 'gaming-controllers', 'gaming-headsets'
         ];
         
         $placeholders = str_repeat('?,', count($slugsToRemove) - 1) . '?';
