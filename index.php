@@ -34,8 +34,21 @@ $stmt = $pdo->query("SELECT * FROM categories
                       LIMIT 4");
 $topCategories = $stmt->fetchAll();
 
+// SEO Configuration for Homepage
 $pageTitle = 'Home';
+$seoData = [
+    'title' => SITE_NAME . ' - Honest Product Reviews & Tech Buying Guides',
+    'description' => 'Discover honest reviews of the latest gadgets, electronics, and tech products. Get expert buying guides and recommendations to make informed purchasing decisions.',
+    'keywords' => 'product reviews, tech reviews, gadget reviews, buying guides, best products, electronics reviews, tech news',
+    'type' => 'website',
+    'url' => '/',
+];
+
 include __DIR__ . '/includes/header.php';
+
+// Generate structured data for homepage
+require_once __DIR__ . '/includes/seo.php';
+generateWebsiteStructuredData();
 ?>
 
 <!-- Hero/Featured Section -->

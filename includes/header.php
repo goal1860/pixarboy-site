@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?><?php echo SITE_NAME; ?></title>
+    
+    <?php 
+    // Include SEO helpers and generate meta tags
+    require_once __DIR__ . '/seo.php';
+    if (isset($seoData) && is_array($seoData)) {
+        generateSEOTags($seoData);
+    } else {
+        generateSEOTags();
+    }
+    ?>
+    
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

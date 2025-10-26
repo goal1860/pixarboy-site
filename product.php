@@ -55,8 +55,58 @@ $stmt = $pdo->prepare("
 $stmt->execute([$product['id'], $product['id']]);
 $relatedProducts = $stmt->fetchAll();
 
+// SEO Configuration for Product
 $pageTitle = $product['name'];
+$metaDescription = $product['description'] ? 
+    generateMetaDescription($product['description'], 160) : 
+    'Read our detailed review of ' . $product['name'] . '. Find specs, pricing, pros & cons, and where to buy.';
+
+$categoryNames = array_map(function($cat) {
+    return $cat['name'];
+}, $categories);
+
+$seoData = [
+    'title' => $product['name'] . ' - Review & Buying Guide | ' . SITE_NAME,
+    'description' => $metaDescription,
+    'keywords' => $product['name'] . ', ' . implode(', ', $categoryNames) . ', product review, buying guide',
+    'type' => 'product',
+    'url' => '/product.php?slug=' . $product['slug'],
+    'image' => $product['image_url'] ?: '/assets/images/og-default.jpg',
+];
+
+// Helper for meta description
+function generateMetaDescription($content, $length = 160) {
+    $text = strip_tags($content);
+    $text = preg_replace('/\s+/', ' ', $text);
+    $text = trim($text);
+    
+    if (strlen($text) > $length) {
+        $text = substr($text, 0, $length);
+        $text = substr($text, 0, strrpos($text, ' ')) . '...';
+    }
+    
+    return $text;
+}
+
 include __DIR__ . '/includes/header.php';
+
+// Generate structured data for product
+require_once __DIR__ . '/includes/seo.php';
+generateProductStructuredData($product, $relatedContent);
+
+// Generate breadcrumb structured data
+$breadcrumbs = [
+    ['name' => 'Home', 'url' => '/']
+];
+if (!empty($categories)) {
+    $mainCategory = $categories[0];
+    if ($mainCategory['parent_name']) {
+        $breadcrumbs[] = ['name' => $mainCategory['parent_name'], 'url' => '/category.php?slug=' . $mainCategory['slug']];
+    }
+    $breadcrumbs[] = ['name' => $mainCategory['name'], 'url' => '/category.php?slug=' . $mainCategory['slug']];
+}
+$breadcrumbs[] = ['name' => $product['name'], 'url' => '/product.php?slug=' . $product['slug']];
+generateBreadcrumbStructuredData($breadcrumbs);
 
 // Initialize Parsedown for markdown
 $Parsedown = new Parsedown();
