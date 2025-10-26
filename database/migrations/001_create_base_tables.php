@@ -35,18 +35,6 @@ class Migration_001_create_base_tables extends Migration {
             ", "Failed to create users table");
         }
         
-        // Create default admin user if doesn't exist
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM users WHERE username = 'admin'");
-        if ($stmt->fetchColumn() == 0) {
-            $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-            $stmt->execute([
-                'admin', 
-                'admin@pixarboy.com', 
-                password_hash('admin123', PASSWORD_DEFAULT), 
-                'admin'
-            ]);
-        }
-        
         // Create content table
         if (!$this->tableExists('content')) {
             $this->execute("
@@ -69,54 +57,17 @@ class Migration_001_create_base_tables extends Migration {
             ", "Failed to create content table");
         }
         
-        // Create categories table with hierarchical support
+        // Create basic categories table (without hierarchy)
         if (!$this->tableExists('categories')) {
             $this->execute("
                 CREATE TABLE categories (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(100) NOT NULL,
+                    name VARCHAR(100) UNIQUE NOT NULL,
                     slug VARCHAR(100) UNIQUE NOT NULL,
                     description TEXT,
-                    parent_id INT DEFAULT NULL,
-                    display_order INT DEFAULT 0,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL,
-                    INDEX idx_parent (parent_id),
-                    INDEX idx_slug (slug),
-                    INDEX idx_order (display_order)
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ", "Failed to create categories table");
-        }
-        
-        // Add default categories if table is empty
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM categories");
-        if ($stmt->fetchColumn() == 0) {
-            // Add default categories
-            $defaultCategories = [
-                ['name' => 'Reviews', 'slug' => 'reviews', 'description' => 'Product reviews and comparisons', 'parent_id' => null, 'order' => 1],
-                ['name' => 'Tech', 'slug' => 'tech', 'description' => 'Technology news and updates', 'parent_id' => null, 'order' => 2],
-                ['name' => 'Guides', 'slug' => 'guides', 'description' => 'How-to guides and tutorials', 'parent_id' => null, 'order' => 3],
-            ];
-            
-            $stmt = $this->pdo->prepare("INSERT INTO categories (name, slug, description, parent_id, display_order) VALUES (?, ?, ?, ?, ?)");
-            $insertedIds = [];
-            
-            foreach ($defaultCategories as $cat) {
-                $stmt->execute([$cat['name'], $cat['slug'], $cat['description'], $cat['parent_id'], $cat['order']]);
-                $insertedIds[$cat['slug']] = $this->pdo->lastInsertId();
-            }
-            
-            // Add subcategories to Reviews
-            $subCategories = [
-                ['name' => 'Audio', 'slug' => 'audio', 'description' => 'Audio equipment reviews', 'parent_id' => $insertedIds['reviews'], 'order' => 1],
-                ['name' => 'Mobile', 'slug' => 'mobile', 'description' => 'Mobile device reviews', 'parent_id' => $insertedIds['reviews'], 'order' => 2],
-                ['name' => 'Laptops', 'slug' => 'laptops', 'description' => 'Laptop reviews', 'parent_id' => $insertedIds['reviews'], 'order' => 3],
-            ];
-            
-            foreach ($subCategories as $cat) {
-                $stmt->execute([$cat['name'], $cat['slug'], $cat['description'], $cat['parent_id'], $cat['order']]);
-            }
         }
         
         // Create content_categories junction table
@@ -138,19 +89,19 @@ class Migration_001_create_base_tables extends Migration {
     public function down() {
         // Drop tables in reverse order (respecting foreign keys)
         if ($this->tableExists('content_categories')) {
-            $this->execute("DROP TABLE content_categories", "Failed to drop content_categories");
+            $this->execute("DROP TABLE content_categories");
         }
         
         if ($this->tableExists('categories')) {
-            $this->execute("DROP TABLE categories", "Failed to drop categories");
+            $this->execute("DROP TABLE categories");
         }
         
         if ($this->tableExists('content')) {
-            $this->execute("DROP TABLE content", "Failed to drop content");
+            $this->execute("DROP TABLE content");
         }
         
         if ($this->tableExists('users')) {
-            $this->execute("DROP TABLE users", "Failed to drop users");
+            $this->execute("DROP TABLE users");
         }
     }
 }
