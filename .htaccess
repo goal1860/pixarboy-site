@@ -6,6 +6,9 @@
     RewriteEngine On
     RewriteBase /
     
+    # Sitemap rewrite
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+    
     # Force HTTPS (Recommended for production)
     # Uncomment these lines after deploying to Hostinger
     # RewriteCond %{HTTPS} off

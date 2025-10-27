@@ -51,6 +51,11 @@ require_once __DIR__ . '/includes/seo.php';
 generateWebsiteStructuredData();
 ?>
 
+<!-- SEO H1 (visually hidden but present for SEO) -->
+<h1 style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+    PixarBoy - Honest Product Reviews, Tech Buying Guides & Gadget Recommendations
+</h1>
+
 <!-- Hero/Featured Section -->
 <?php if ($featuredPost): ?>
 <section class="featured-hero">

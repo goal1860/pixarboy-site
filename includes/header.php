@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?><?php echo SITE_NAME; ?></title>
+    <title><?php 
+    if (isset($seoData['title'])) {
+        echo htmlspecialchars($seoData['title']);
+    } else {
+        echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : '';
+        echo htmlspecialchars(SITE_NAME);
+    }
+    ?></title>
     
     <?php 
     // Include SEO helpers and generate meta tags

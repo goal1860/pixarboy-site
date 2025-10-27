@@ -55,6 +55,9 @@ $stmt = $pdo->prepare("
 $stmt->execute([$product['id'], $product['id']]);
 $relatedProducts = $stmt->fetchAll();
 
+// Load SEO helpers
+require_once __DIR__ . '/includes/seo.php';
+
 // SEO Configuration for Product
 $pageTitle = $product['name'];
 $metaDescription = $product['description'] ? 
@@ -74,24 +77,9 @@ $seoData = [
     'image' => $product['image_url'] ?: '/assets/images/og-default.jpg',
 ];
 
-// Helper for meta description
-function generateMetaDescription($content, $length = 160) {
-    $text = strip_tags($content);
-    $text = preg_replace('/\s+/', ' ', $text);
-    $text = trim($text);
-    
-    if (strlen($text) > $length) {
-        $text = substr($text, 0, $length);
-        $text = substr($text, 0, strrpos($text, ' ')) . '...';
-    }
-    
-    return $text;
-}
-
 include __DIR__ . '/includes/header.php';
 
 // Generate structured data for product
-require_once __DIR__ . '/includes/seo.php';
 generateProductStructuredData($product, $relatedContent);
 
 // Generate breadcrumb structured data

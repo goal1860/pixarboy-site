@@ -1,0 +1,15 @@
+# robots.txt for PixarBoy
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /config/
+Disallow: /database/
+Disallow: /tmp/
+Disallow: /logout.php
+
+# Sitemaps
+Sitemap: https://pixarboy.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
