@@ -64,7 +64,7 @@ generateWebsiteStructuredData();
             <div class="featured-hero-image">
                 <?php 
                 $heroImagePath = null;
-                if ($featuredPost['slug'] === 'apple-airpods-4-review') {
+                if ($featuredPost['slug'] === 'apple-airpods-4-review-2024') {
                     $heroImagePath = '/assets/images/airpods-4-hero.svg';
                 }
                 
@@ -269,7 +269,7 @@ generateWebsiteStructuredData();
                                 <div class="post-card-image">
                                     <?php 
                                     $cardImagePath = null;
-                                    if ($post['slug'] === 'apple-airpods-4-review') {
+                                    if ($post['slug'] === 'apple-airpods-4-review-2024') {
                                         $cardImagePath = '/assets/images/airpods-4-hero.svg';
                                     }
                                     
@@ -372,7 +372,7 @@ generateWebsiteStructuredData();
                             <div class="recent-post-thumb">
                                 <?php 
                                 $thumbPath = null;
-                                if ($recent['slug'] === 'apple-airpods-4-review') {
+                                if ($recent['slug'] === 'apple-airpods-4-review-2024') {
                                     $thumbPath = '/assets/images/airpods-4-hero.svg';
                                 }
                                 

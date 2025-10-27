@@ -91,7 +91,7 @@ include __DIR__ . '/includes/header.php';
             <?php 
             // Check for specific post images
             $imagePath = null;
-            if ($post['slug'] === 'apple-airpods-4-review') {
+            if ($post['slug'] === 'apple-airpods-4-review-2024') {
                 $imagePath = '/assets/images/airpods-4-hero.svg';
             }
             
@@ -143,7 +143,7 @@ include __DIR__ . '/includes/header.php';
                                 <?php 
                                 // Check for specific post images
                                 $relatedImagePath = null;
-                                if ($relatedPost['slug'] === 'apple-airpods-4-review') {
+                                if ($relatedPost['slug'] === 'apple-airpods-4-review-2024') {
                                     $relatedImagePath = '/assets/images/airpods-4-hero.svg';
                                 }
                                 
