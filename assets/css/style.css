@@ -119,6 +119,19 @@ a:hover {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.site-logo {
+    height: 60px;
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.site-logo:hover {
+    transform: scale(1.05);
 }
 
 .nav-menu {

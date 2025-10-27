@@ -32,7 +32,9 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <a href="/"><?php echo SITE_NAME; ?></a>
+                <a href="/">
+                    <img src="/assets/images/logo.png" alt="<?php echo SITE_NAME; ?>" class="site-logo">
+                </a>
             </div>
             
             <!-- Mobile Menu Toggle -->
