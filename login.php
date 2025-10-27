@@ -101,14 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
             
-            <div class="login-footer">
-                <p><strong>Demo Credentials:</strong></p>
-                <p style="margin-top: 0.5rem;">
-                    <strong>Username:</strong> admin<br>
-                    <strong>Password:</strong> admin123
-                </p>
-            </div>
-            
             <div style="text-align: center; margin-top: 1.5rem;">
                 <a href="/" style="color: var(--primary-color); font-weight: 500;">
                     ← Back to Home

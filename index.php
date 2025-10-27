@@ -38,7 +38,7 @@ $topCategories = $stmt->fetchAll();
 $pageTitle = 'Home';
 $seoData = [
     'title' => SITE_NAME . ' - Honest Product Reviews & Tech Buying Guides',
-    'description' => 'Discover honest reviews of the latest gadgets, electronics, and tech products. Get expert buying guides and recommendations to make informed purchasing decisions.',
+    'description' => 'Honest reviews of the latest gadgets and tech products. Expert buying guides to help you make informed decisions.',
     'keywords' => 'product reviews, tech reviews, gadget reviews, buying guides, best products, electronics reviews, tech news',
     'type' => 'website',
     'url' => '/',
@@ -84,11 +84,11 @@ generateWebsiteStructuredData();
             
             <div class="featured-hero-text">
                 <span class="featured-category">Latest Review</span>
-                <h1 class="featured-title">
+                <h2 class="featured-title">
                     <a href="/post/<?php echo urlencode($featuredPost['slug']); ?>">
                         <?php echo htmlspecialchars($featuredPost['title']); ?>
                     </a>
-                </h1>
+                </h2>
                 
                 <?php if ($featuredPost['excerpt']): ?>
                     <p class="featured-excerpt">
@@ -119,6 +119,35 @@ generateWebsiteStructuredData();
     </div>
 </section>
 <?php endif; ?>
+
+<!-- Introduction Section -->
+<section class="container" style="margin: 3rem auto; padding: 0 1rem;">
+    <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--dark-color);">Your Trusted Source for Tech Product Reviews</h2>
+        <div style="font-size: 1.125rem; line-height: 1.8; color: var(--text-color); text-align: left;">
+            <p style="margin-bottom: 1.5rem;">
+                Welcome to <strong>PixarBoy</strong>, where we provide honest, in-depth reviews of the latest technology products and gadgets. 
+                Our mission is to help you make informed purchasing decisions by sharing real-world testing experiences, detailed comparisons, 
+                and expert recommendations.
+            </p>
+            <p style="margin-bottom: 1.5rem;">
+                We test every product ourselves—from wireless earbuds and smartphones to smart home devices and gaming accessories. 
+                Our reviews are based on weeks of hands-on experience, not just specs from a manufacturer's website. We believe in 
+                transparency: if a product has flaws, we'll tell you about them. If it exceeds expectations, you'll know that too.
+            </p>
+            <p style="margin-bottom: 1.5rem;">
+                Whether you're looking for the <strong>best wireless earbuds</strong> for your daily commute, the <strong>perfect laptop</strong> 
+                for remote work, or the latest <strong>smart home gadgets</strong> to upgrade your living space, we've got you covered. 
+                Our comprehensive buying guides break down complex technical specifications into simple, easy-to-understand recommendations 
+                that match your budget and needs.
+            </p>
+            <p style="margin-bottom: 0;">
+                Join thousands of tech enthusiasts who trust PixarBoy for unbiased product reviews, practical buying advice, and the latest 
+                tech news. Subscribe to our newsletter to stay updated on new reviews, exclusive deals, and insider tips from our testing lab.
+            </p>
+        </div>
+    </div>
+</section>
 
 <!-- Product Categories Section -->
 <?php if (!empty($topCategories)): ?>
@@ -209,7 +238,8 @@ generateWebsiteStructuredData();
                             <?php endif; ?>
                             
                             <a href="/product/<?php echo urlencode($product['slug']); ?>" 
-                               class="btn btn-primary btn-sm">
+                               class="btn btn-primary btn-sm"
+                               aria-label="View details for <?php echo htmlspecialchars($product['name']); ?>">
                                 View Details
                             </a>
                         </div>
@@ -311,7 +341,11 @@ generateWebsiteStructuredData();
                                             </div>
                                             <span class="post-author-name"><?php echo htmlspecialchars($post['author']); ?></span>
                                         </div>
-                                        <a href="/post/<?php echo urlencode($post['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
+                                        <a href="/post/<?php echo urlencode($post['slug']); ?>" 
+                                           class="btn btn-sm btn-primary"
+                                           aria-label="Read more about <?php echo htmlspecialchars($post['title']); ?>">
+                                            Read More
+                                        </a>
                                     </div>
                                 </div>
                             </article>
