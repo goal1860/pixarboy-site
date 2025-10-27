@@ -175,20 +175,10 @@ include __DIR__ . '/includes/header.php';
                                     <div></div>
                                 <?php endif; ?>
                                 
-                                <?php if ($product['affiliate_link']): ?>
-                                    <a href="<?php echo htmlspecialchars($product['affiliate_link']); ?>" 
-                                       class="btn btn-gradient btn-sm" 
-                                       target="_blank" 
-                                       rel="nofollow noopener"
-                                       onclick="event.stopPropagation();">
-                                        Buy Now
-                                    </a>
-                                <?php else: ?>
-                                    <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>" 
-                                       class="btn btn-primary btn-sm">
-                                        View Details
-                                    </a>
-                                <?php endif; ?>
+                                <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>" 
+                                   class="btn btn-primary btn-sm">
+                                    View Details
+                                </a>
                             </div>
                         </div>
                     </article>

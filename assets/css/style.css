@@ -208,6 +208,11 @@ a:hover {
     margin-left: 0;
     position: static !important;
     padding: 0.5rem 1.25rem !important;
+    color: white !important;
+}
+
+.nav-login-btn:hover {
+    color: white !important;
 }
 
 .nav-login-btn::after {
@@ -491,7 +496,7 @@ a:hover {
     margin-bottom: 2rem;
 }
 
-.card:hover {
+.card:not(.post-content):hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
 }
@@ -1423,9 +1428,20 @@ select.form-control {
 /* ============================================
    Post Content Styling (Markdown)
    ============================================ */
+.post-content {
+    color: var(--text-color) !important;
+}
+
+.post-content h1 {
+    font-size: 2.25rem;
+    color: var(--dark-color) !important;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+}
+
 .post-content h2 {
     font-size: 1.75rem;
-    color: var(--dark-color);
+    color: var(--dark-color) !important;
     margin-top: 2.5rem;
     margin-bottom: 1.25rem;
     padding-bottom: 0.5rem;
@@ -1434,21 +1450,21 @@ select.form-control {
 
 .post-content h3 {
     font-size: 1.4rem;
-    color: var(--dark-color);
+    color: var(--dark-color) !important;
     margin-top: 2rem;
     margin-bottom: 1rem;
 }
 
 .post-content h4 {
     font-size: 1.2rem;
-    color: var(--text-color);
+    color: var(--text-color) !important;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
 }
 
 .post-content p {
     margin-bottom: 1.5rem;
-    color: var(--text-color);
+    color: var(--text-color) !important;
     line-height: 1.8;
 }
 
@@ -1456,21 +1472,22 @@ select.form-control {
 .post-content ol {
     margin-bottom: 1.5rem;
     padding-left: 2rem;
+    color: var(--text-color) !important;
 }
 
 .post-content li {
     margin-bottom: 0.75rem;
-    color: var(--text-color);
+    color: var(--text-color) !important;
     line-height: 1.7;
 }
 
 .post-content li strong {
-    color: var(--dark-color);
+    color: var(--dark-color) !important;
 }
 
 .post-content strong {
     font-weight: 700;
-    color: var(--dark-color);
+    color: var(--dark-color) !important;
 }
 
 .post-content code {

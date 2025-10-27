@@ -133,19 +133,7 @@ $Parsedown = new Parsedown();
                     </div>
                 <?php endif; ?>
                 
-                <?php if ($product['affiliate_link']): ?>
-                    <a href="<?php echo htmlspecialchars($product['affiliate_link']); ?>" 
-                       class="btn btn-white" 
-                       target="_blank" 
-                       rel="nofollow noopener"
-                       style="background: white; color: var(--primary-color); font-size: 1.125rem; padding: 1rem 2rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; border-radius: 8px; font-weight: 600;">
-                        🛒 Check Price & Buy Now
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
-                            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/>
-                        </svg>
-                    </a>
-                <?php endif; ?>
+                <!-- Price information displayed above -->
             </div>
         </div>
     </div>
@@ -236,15 +224,7 @@ $Parsedown = new Parsedown();
                             </div>
                         <?php endif; ?>
                         
-                        <?php if ($product['affiliate_link']): ?>
-                            <a href="<?php echo htmlspecialchars($product['affiliate_link']); ?>" 
-                               class="btn btn-gradient btn-block" 
-                               target="_blank" 
-                               rel="nofollow noopener"
-                               style="margin-top: 1rem; text-align: center; display: block;">
-                                🛒 Buy Now
-                            </a>
-                        <?php endif; ?>
+                        <!-- Product information displayed above -->
                     </div>
                 </div>
             </aside>
@@ -290,15 +270,10 @@ $Parsedown = new Parsedown();
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <?php if ($related['affiliate_link']): ?>
-                                        <a href="<?php echo htmlspecialchars($related['affiliate_link']); ?>" 
-                                           class="btn btn-gradient btn-sm" 
-                                           target="_blank" 
-                                           rel="nofollow noopener"
-                                           onclick="event.stopPropagation();">
-                                            Buy Now
-                                        </a>
-                                    <?php endif; ?>
+                                    <a href="/product.php?slug=<?php echo urlencode($related['slug']); ?>" 
+                                       class="btn btn-primary btn-sm">
+                                        View Details
+                                    </a>
                                 </div>
                             </div>
                         </article>
