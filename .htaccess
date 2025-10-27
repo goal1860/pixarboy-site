@@ -6,6 +6,16 @@
     RewriteEngine On
     RewriteBase /
     
+    # SEO-Friendly URLs
+    # Post URLs: /post/slug
+    RewriteRule ^post/([a-zA-Z0-9\-]+)/?$ post.php?slug=$1 [L,QSA]
+    
+    # Product URLs: /product/slug
+    RewriteRule ^product/([a-zA-Z0-9\-]+)/?$ product.php?slug=$1 [L,QSA]
+    
+    # Category URLs: /category/slug
+    RewriteRule ^category/([a-zA-Z0-9\-]+)/?$ category.php?slug=$1 [L,QSA]
+    
     # Sitemap rewrite
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
     

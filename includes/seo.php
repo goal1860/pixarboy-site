@@ -84,7 +84,7 @@ function generateProductStructuredData($product, $reviews = []) {
         "name" => $product['name'],
         "description" => strip_tags($product['description'] ?? ''),
         "image" => $product['image_url'] ? $baseUrl . $product['image_url'] : null,
-        "url" => $baseUrl . '/product.php?slug=' . $product['slug'],
+        "url" => $baseUrl . '/product/' . $product['slug'],
         "sku" => $product['id'],
     ];
     
@@ -100,7 +100,7 @@ function generateProductStructuredData($product, $reviews = []) {
     if (isset($product['price']) && $product['price']) {
         $structuredData["offers"] = [
             "@type" => "Offer",
-            "url" => $baseUrl . '/product.php?slug=' . $product['slug'],
+            "url" => $baseUrl . '/product/' . $product['slug'],
             "priceCurrency" => $product['currency'] ?? 'USD',
             "price" => $product['price'],
             "availability" => $product['status'] === 'active' ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",

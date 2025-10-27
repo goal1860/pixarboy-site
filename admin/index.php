@@ -129,7 +129,7 @@ include __DIR__ . '/../includes/header.php';
                         <td class="table-actions">
                             <a href="content.php?action=edit&id=<?php echo $item['id']; ?>" class="btn btn-primary btn-sm">Edit</a>
                             <?php if ($item['status'] === 'published'): ?>
-                                <a href="/post.php?slug=<?php echo urlencode($item['slug']); ?>" class="btn btn-secondary btn-sm" target="_blank">View</a>
+                                <a href="/post/<?php echo urlencode($item['slug']); ?>" class="btn btn-secondary btn-sm" target="_blank">View</a>
                             <?php endif; ?>
                         </td>
                     </tr>

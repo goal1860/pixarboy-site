@@ -136,7 +136,7 @@ include __DIR__ . '/includes/header.php';
                 <?php foreach ($products as $product): ?>
                     <article class="post-card product-card">
                         <?php if ($product['image_url']): ?>
-                            <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>" class="post-image">
+                            <a href="/product/<?php echo urlencode($product['slug']); ?>" class="post-image">
                                 <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
                                      alt="<?php echo htmlspecialchars($product['name']); ?>">
                             </a>
@@ -155,7 +155,7 @@ include __DIR__ . '/includes/header.php';
                             <?php endif; ?>
                             
                             <h3 class="post-title">
-                                <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>">
+                                <a href="/product/<?php echo urlencode($product['slug']); ?>">
                                     <?php echo htmlspecialchars($product['name']); ?>
                                 </a>
                             </h3>
@@ -175,7 +175,7 @@ include __DIR__ . '/includes/header.php';
                                     <div></div>
                                 <?php endif; ?>
                                 
-                                <a href="/product.php?slug=<?php echo urlencode($product['slug']); ?>" 
+                                <a href="/product/<?php echo urlencode($product['slug']); ?>" 
                                    class="btn btn-primary btn-sm">
                                     View Details
                                 </a>

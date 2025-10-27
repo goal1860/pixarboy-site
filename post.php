@@ -116,7 +116,7 @@ include __DIR__ . '/includes/header.php';
                     <h4 style="margin-bottom: 0.5rem;">Share this post</h4>
                     <div style="display: flex; gap: 0.75rem;">
                         <?php 
-                        $fullUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/post.php?slug=" . $post['slug'];
+                        $fullUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/post/" . $post['slug'];
                         ?>
                         <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($fullUrl); ?>&text=<?php echo urlencode($post['title']); ?>" target="_blank" class="btn btn-sm btn-primary">Twitter</a>
                         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($fullUrl); ?>" target="_blank" class="btn btn-sm btn-secondary">Facebook</a>
@@ -160,7 +160,7 @@ include __DIR__ . '/includes/header.php';
                                     <span>📅 <?php echo date('M j, Y', strtotime($relatedPost['created_at'])); ?></span>
                                 </div>
                                 <h3 class="post-card-title">
-                                    <a href="/post.php?slug=<?php echo urlencode($relatedPost['slug']); ?>">
+                                    <a href="/post/<?php echo urlencode($relatedPost['slug']); ?>">
                                         <?php echo htmlspecialchars($relatedPost['title']); ?>
                                     </a>
                                 </h3>
@@ -181,7 +181,7 @@ include __DIR__ . '/includes/header.php';
                                         </div>
                                         <span class="post-author-name"><?php echo htmlspecialchars($relatedPost['author']); ?></span>
                                     </div>
-                                        <a href="/post.php?slug=<?php echo urlencode($relatedPost['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
+                                        <a href="/post/<?php echo urlencode($relatedPost['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
                                 </div>
                             </div>
                         </article>

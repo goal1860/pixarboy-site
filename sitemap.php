@@ -31,7 +31,7 @@ $posts = $stmt->fetchAll();
 foreach ($posts as $post) {
     $lastmod = date('Y-m-d', strtotime($post['updated_at']));
     echo "  <url>\n";
-    echo "    <loc>{$baseUrl}/post.php?slug=" . htmlspecialchars($post['slug']) . "</loc>\n";
+    echo "    <loc>{$baseUrl}/post/" . htmlspecialchars($post['slug']) . "</loc>\n";
     echo "    <changefreq>weekly</changefreq>\n";
     echo "    <priority>0.8</priority>\n";
     echo "    <lastmod>{$lastmod}</lastmod>\n";
@@ -45,7 +45,7 @@ $products = $stmt->fetchAll();
 foreach ($products as $product) {
     $lastmod = date('Y-m-d', strtotime($product['updated_at']));
     echo "  <url>\n";
-    echo "    <loc>{$baseUrl}/product.php?slug=" . htmlspecialchars($product['slug']) . "</loc>\n";
+    echo "    <loc>{$baseUrl}/product/" . htmlspecialchars($product['slug']) . "</loc>\n";
     echo "    <changefreq>weekly</changefreq>\n";
     echo "    <priority>0.9</priority>\n";
     echo "    <lastmod>{$lastmod}</lastmod>\n";
@@ -59,7 +59,7 @@ $categories = $stmt->fetchAll();
 foreach ($categories as $category) {
     $lastmod = date('Y-m-d', strtotime($category['updated_at']));
     echo "  <url>\n";
-    echo "    <loc>{$baseUrl}/category.php?slug=" . htmlspecialchars($category['slug']) . "</loc>\n";
+    echo "    <loc>{$baseUrl}/category/" . htmlspecialchars($category['slug']) . "</loc>\n";
     echo "    <changefreq>weekly</changefreq>\n";
     echo "    <priority>0.7</priority>\n";
     echo "    <lastmod>{$lastmod}</lastmod>\n";

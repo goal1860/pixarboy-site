@@ -108,7 +108,7 @@ $Parsedown = new Parsedown();
                 <?php if (!empty($categories)): ?>
                     <div style="margin-bottom: 1rem;">
                         <?php foreach ($categories as $cat): ?>
-                            <a href="/category.php?slug=<?php echo urlencode($cat['slug']); ?>" 
+                            <a href="/category/<?php echo urlencode($cat['slug']); ?>" 
                                class="badge" 
                                style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; margin-right: 0.5rem;">
                                 <?php echo htmlspecialchars($cat['parent_name'] ? $cat['parent_name'] . ' › ' . $cat['name'] : $cat['name']); ?>
@@ -167,7 +167,7 @@ $Parsedown = new Parsedown();
                         <h2 style="margin-bottom: 1.5rem;">📚 Related Articles & Reviews</h2>
                         <div class="related-posts">
                             <?php foreach ($relatedContent as $content): ?>
-                                <a href="/post.php?slug=<?php echo urlencode($content['slug']); ?>" class="related-post-item">
+                                <a href="/post/<?php echo urlencode($content['slug']); ?>" class="related-post-item">
                                     <h3><?php echo htmlspecialchars($content['title']); ?></h3>
                                     <?php if ($content['excerpt']): ?>
                                         <p><?php echo htmlspecialchars(substr($content['excerpt'], 0, 100)) . '...'; ?></p>
@@ -216,7 +216,7 @@ $Parsedown = new Parsedown();
                                 <div style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">Categories</div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                                     <?php foreach ($categories as $cat): ?>
-                                        <a href="/category.php?slug=<?php echo urlencode($cat['slug']); ?>" class="badge badge-primary" style="text-decoration: none;">
+                                        <a href="/category/<?php echo urlencode($cat['slug']); ?>" class="badge badge-primary" style="text-decoration: none;">
                                             <?php echo htmlspecialchars($cat['name']); ?>
                                         </a>
                                     <?php endforeach; ?>
@@ -238,7 +238,7 @@ $Parsedown = new Parsedown();
                     <?php foreach ($relatedProducts as $related): ?>
                         <article class="post-card product-card">
                             <?php if ($related['image_url']): ?>
-                                <a href="/product.php?slug=<?php echo urlencode($related['slug']); ?>" class="post-image">
+                                <a href="/product/<?php echo urlencode($related['slug']); ?>" class="post-image">
                                     <img src="<?php echo htmlspecialchars($related['image_url']); ?>" 
                                          alt="<?php echo htmlspecialchars($related['name']); ?>">
                                 </a>
@@ -252,7 +252,7 @@ $Parsedown = new Parsedown();
                                 <?php endif; ?>
                                 
                                 <h3 class="post-title">
-                                    <a href="/product.php?slug=<?php echo urlencode($related['slug']); ?>">
+                                    <a href="/product/<?php echo urlencode($related['slug']); ?>">
                                         <?php echo htmlspecialchars($related['name']); ?>
                                     </a>
                                 </h3>
@@ -270,7 +270,7 @@ $Parsedown = new Parsedown();
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <a href="/product.php?slug=<?php echo urlencode($related['slug']); ?>" 
+                                    <a href="/product/<?php echo urlencode($related['slug']); ?>" 
                                        class="btn btn-primary btn-sm">
                                         View Details
                                     </a>
