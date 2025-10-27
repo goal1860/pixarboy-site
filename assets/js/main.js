@@ -161,36 +161,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ============================================
-    // Animate Elements on Scroll
+    // Animate Elements on Scroll - DISABLED
     // ============================================
-    const animateOnScroll = function() {
-        const elements = document.querySelectorAll('.fade-in, .post-card, .stat-card, .card');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, index * 100);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-        
-        elements.forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            observer.observe(element);
-        });
-    };
-    
-    // Run animation
-    animateOnScroll();
+    // Animation disabled for better performance and compatibility
     
     // ============================================
     // Character Counter for Textareas

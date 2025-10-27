@@ -105,7 +105,7 @@ include __DIR__ . '/includes/header.php';
         </div>
         
         <!-- Post Content -->
-        <div class="card post-content" style="font-size: 1.125rem; line-height: 1.8;">
+        <div class="post-content card" style="font-size: 1.125rem; line-height: 1.8;">
             <?php echo $Parsedown->text($post['content']); ?>
         </div>
         
