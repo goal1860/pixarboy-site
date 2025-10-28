@@ -182,7 +182,7 @@ include __DIR__ . '/includes/header.php';
                                     <span>📅 <?php echo date('M j, Y', strtotime($relatedPost['created_at'])); ?></span>
                                 </div>
                                 <h3 class="post-card-title">
-                                    <a href="/post/<?php echo urlencode($relatedPost['slug']); ?>">
+                                    <a href="/post/<?php echo htmlspecialchars($relatedPost['slug']); ?>">
                                         <?php echo htmlspecialchars($relatedPost['title']); ?>
                                     </a>
                                 </h3>
@@ -203,7 +203,7 @@ include __DIR__ . '/includes/header.php';
                                         </div>
                                         <span class="post-author-name"><?php echo htmlspecialchars($relatedPost['author']); ?></span>
                                     </div>
-                                        <a href="/post/<?php echo urlencode($relatedPost['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
+                                        <a href="/post/<?php echo htmlspecialchars($relatedPost['slug']); ?>" class="btn btn-sm btn-primary">Read More</a>
                                 </div>
                             </div>
                         </article>

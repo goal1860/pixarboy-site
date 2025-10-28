@@ -85,7 +85,7 @@ generateWebsiteStructuredData();
             <div class="featured-hero-text">
                 <span class="featured-category">Latest Review</span>
                 <h2 class="featured-title">
-                    <a href="/post/<?php echo urlencode($featuredPost['slug']); ?>">
+                    <a href="/post/<?php echo htmlspecialchars($featuredPost['slug']); ?>">
                         <?php echo htmlspecialchars($featuredPost['title']); ?>
                     </a>
                 </h2>
@@ -107,7 +107,7 @@ generateWebsiteStructuredData();
                         </div>
                     </div>
                     
-                    <a href="/post/<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-gradient">
+                    <a href="/post/<?php echo htmlspecialchars($featuredPost['slug']); ?>" class="btn btn-gradient">
                         Read Full Review
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-left: 5px;">
                             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -159,7 +159,7 @@ generateWebsiteStructuredData();
         </div>
         <div class="category-grid">
             <?php foreach ($topCategories as $category): ?>
-                <a href="/category/<?php echo urlencode($category['slug']); ?>" 
+                <a href="/category/<?php echo htmlspecialchars($category['slug']); ?>" 
                    class="category-card">
                     <div style="font-size: 3rem; margin-bottom: 0.5rem;">
                         <?php
@@ -197,7 +197,7 @@ generateWebsiteStructuredData();
             <?php foreach ($featuredProducts as $product): ?>
                 <article class="post-card product-card">
                     <?php if ($product['image_url']): ?>
-                        <a href="/product/<?php echo urlencode($product['slug']); ?>" class="post-image">
+                        <a href="/product/<?php echo htmlspecialchars($product['slug']); ?>" class="post-image">
                             <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
                                  alt="<?php echo htmlspecialchars($product['name']); ?>">
                         </a>
@@ -217,7 +217,7 @@ generateWebsiteStructuredData();
                         <?php endif; ?>
                         
                         <h3 class="post-title">
-                            <a href="/product/<?php echo urlencode($product['slug']); ?>">
+                            <a href="/product/<?php echo htmlspecialchars($product['slug']); ?>">
                                 <?php echo htmlspecialchars($product['name']); ?>
                             </a>
                         </h3>
@@ -237,7 +237,7 @@ generateWebsiteStructuredData();
                                 <div></div>
                             <?php endif; ?>
                             
-                            <a href="/product/<?php echo urlencode($product['slug']); ?>" 
+                            <a href="/product/<?php echo htmlspecialchars($product['slug']); ?>" 
                                class="btn btn-primary btn-sm"
                                aria-label="View details for <?php echo htmlspecialchars($product['name']); ?>">
                                 View Details
@@ -318,7 +318,7 @@ generateWebsiteStructuredData();
                                     </div>
                                     
                                     <h3 class="post-card-title">
-                                        <a href="/post/<?php echo urlencode($post['slug']); ?>">
+                                        <a href="/post/<?php echo htmlspecialchars($post['slug']); ?>">
                                             <?php echo htmlspecialchars($post['title']); ?>
                                         </a>
                                     </h3>
@@ -341,7 +341,7 @@ generateWebsiteStructuredData();
                                             </div>
                                             <span class="post-author-name"><?php echo htmlspecialchars($post['author']); ?></span>
                                         </div>
-                                        <a href="/post/<?php echo urlencode($post['slug']); ?>" 
+                                        <a href="/post/<?php echo htmlspecialchars($post['slug']); ?>" 
                                            class="btn btn-sm btn-primary"
                                            aria-label="Read more about <?php echo htmlspecialchars($post['title']); ?>">
                                             Read More
@@ -420,7 +420,7 @@ generateWebsiteStructuredData();
                             </div>
                             <div class="recent-post-content">
                                 <h4>
-                                    <a href="/post/<?php echo urlencode($recent['slug']); ?>">
+                                    <a href="/post/<?php echo htmlspecialchars($recent['slug']); ?>">
                                         <?php echo htmlspecialchars(substr($recent['title'], 0, 50)) . (strlen($recent['title']) > 50 ? '...' : ''); ?>
                                     </a>
                                 </h4>

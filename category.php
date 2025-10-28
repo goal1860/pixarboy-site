@@ -101,7 +101,7 @@ include __DIR__ . '/includes/header.php';
             <h2 style="margin-bottom: 1.5rem;">Browse by Subcategory</h2>
             <div class="posts-grid">
                 <?php foreach ($subcategories as $sub): ?>
-                    <a href="/category.php?slug=<?php echo urlencode($sub['slug']); ?>" 
+                    <a href="/category.php?slug=<?php echo htmlspecialchars($sub['slug']); ?>" 
                        class="card" 
                        style="text-decoration: none; color: inherit; text-align: center; padding: 2rem; transition: all 0.3s ease; cursor: pointer;">
                         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">
@@ -136,7 +136,7 @@ include __DIR__ . '/includes/header.php';
                 <?php foreach ($products as $product): ?>
                     <article class="post-card product-card">
                         <?php if ($product['image_url']): ?>
-                            <a href="/product/<?php echo urlencode($product['slug']); ?>" class="post-image">
+                            <a href="/product/<?php echo htmlspecialchars($product['slug']); ?>" class="post-image">
                                 <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
                                      alt="<?php echo htmlspecialchars($product['name']); ?>">
                             </a>
@@ -155,7 +155,7 @@ include __DIR__ . '/includes/header.php';
                             <?php endif; ?>
                             
                             <h3 class="post-title">
-                                <a href="/product/<?php echo urlencode($product['slug']); ?>">
+                                <a href="/product/<?php echo htmlspecialchars($product['slug']); ?>">
                                     <?php echo htmlspecialchars($product['name']); ?>
                                 </a>
                             </h3>
@@ -175,7 +175,7 @@ include __DIR__ . '/includes/header.php';
                                     <div></div>
                                 <?php endif; ?>
                                 
-                                <a href="/product/<?php echo urlencode($product['slug']); ?>" 
+                                <a href="/product/<?php echo htmlspecialchars($product['slug']); ?>" 
                                    class="btn btn-primary btn-sm">
                                     View Details
                                 </a>
@@ -203,7 +203,7 @@ include __DIR__ . '/includes/header.php';
                     <article class="post-card">
                         <div class="post-body">
                             <h3 class="post-title">
-                                <a href="/post.php?slug=<?php echo urlencode($post['slug']); ?>">
+                                <a href="/post.php?slug=<?php echo htmlspecialchars($post['slug']); ?>">
                                     <?php echo htmlspecialchars($post['title']); ?>
                                 </a>
                             </h3>
