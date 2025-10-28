@@ -32,7 +32,9 @@ function isAdmin() {
 }
 
 function sanitize($data) {
-    return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
+    // Only strip tags and trim - don't encode quotes
+    // Quotes should be stored as-is and only escaped when output to HTML
+    return strip_tags(trim($data));
 }
 
 function showMessage($message, $type = 'success') {
