@@ -90,15 +90,8 @@ include __DIR__ . '/includes/header.php';
         
         <!-- Featured Image -->
         <div class="post-featured-image" style="width: 100%; height: 400px; border-radius: 16px; margin-bottom: 3rem; box-shadow: var(--shadow-lg); overflow: hidden;">
-            <?php 
-            // Check for specific post images
-            $imagePath = null;
-            if ($post['slug'] === 'apple-airpods-4-review-2024') {
-                $imagePath = '/assets/images/airpods-4-hero.svg';
-            }
-            
-            if ($imagePath): ?>
-                <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+            <?php if (!empty($post['hero_image_url'])): ?>
+                <img src="<?php echo htmlspecialchars($post['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
                 <div style="width: 100%; height: 100%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
                     <?php echo strtoupper(substr($post['title'], 0, 1)); ?>
@@ -162,15 +155,8 @@ include __DIR__ . '/includes/header.php';
                     <?php foreach ($relatedPosts as $relatedPost): ?>
                         <article class="post-card">
                             <div class="post-card-image">
-                                <?php 
-                                // Check for specific post images
-                                $relatedImagePath = null;
-                                if ($relatedPost['slug'] === 'apple-airpods-4-review-2024') {
-                                    $relatedImagePath = '/assets/images/airpods-4-hero.svg';
-                                }
-                                
-                                if ($relatedImagePath): ?>
-                                    <img src="<?php echo $relatedImagePath; ?>" alt="<?php echo htmlspecialchars($relatedPost['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                <?php if (!empty($relatedPost['hero_image_url'])): ?>
+                                    <img src="<?php echo htmlspecialchars($relatedPost['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($relatedPost['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                                 <?php endif; ?>
                                 
                                 <span class="post-card-badge">

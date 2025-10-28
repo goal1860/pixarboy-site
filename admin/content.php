@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $slug = trim($slug, '-');
         $content = $_POST['content']; // Don't sanitize content - allow HTML
         $excerpt = sanitize($_POST['excerpt']);
+        $heroImageUrl = sanitize($_POST['hero_image_url']);
         $status = $_POST['status'];
         $productId = !empty($_POST['product_id']) ? $_POST['product_id'] : null;
         
@@ -28,12 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         try {
             if ($action === 'new') {
-                $stmt = $pdo->prepare("INSERT INTO content (title, slug, content, excerpt, status, author_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $slug, $content, $excerpt, $status, $authorId, $productId]);
+                $stmt = $pdo->prepare("INSERT INTO content (title, slug, content, excerpt, hero_image_url, status, author_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$title, $slug, $content, $excerpt, $heroImageUrl, $status, $authorId, $productId]);
                 showMessage('Content created successfully!', 'success');
             } else {
-                $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, status=?, author_id=?, product_id=? WHERE id=?");
-                $stmt->execute([$title, $slug, $content, $excerpt, $status, $authorId, $productId, $contentId]);
+                $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, hero_image_url=?, status=?, author_id=?, product_id=? WHERE id=?");
+                $stmt->execute([$title, $slug, $content, $excerpt, $heroImageUrl, $status, $authorId, $productId, $contentId]);
                 showMessage('Content updated successfully!', 'success');
             }
             redirect('/admin/content.php');
@@ -225,6 +226,24 @@ include __DIR__ . '/../includes/header.php';
                     placeholder="A brief summary that will appear in listings and search results..."
                 ><?php echo isset($item) ? htmlspecialchars($item['excerpt']) : ''; ?></textarea>
                 <small style="color: var(--text-light);">Optional short description (recommended for better engagement)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="hero_image_url">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                    </svg>
+                    Hero Image URL
+                </label>
+                <input 
+                    type="text" 
+                    id="hero_image_url" 
+                    name="hero_image_url" 
+                    class="form-control" 
+                    placeholder="/assets/images/hero.jpg or https://example.com/image.jpg"
+                    value="<?php echo isset($item) ? htmlspecialchars($item['hero_image_url']) : ''; ?>"
+                >
+                <small style="color: var(--text-light);">Full URL or relative path for the featured image</small>
             </div>
             
             <?php if (isAdmin()): ?>
