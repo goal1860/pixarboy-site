@@ -14,8 +14,8 @@ $allPosts = $stmt->fetchAll();
 // Get featured post (most recent)
 $featuredPost = !empty($allPosts) ? $allPosts[0] : null;
 
-// Get remaining posts
-$remainingPosts = array_slice($allPosts, 1);
+// Get remaining posts (all posts for the grid, excluding featured)
+$remainingPosts = $allPosts;
 
 // Get recent posts for sidebar
 $recentPosts = array_slice($allPosts, 0, 5);
@@ -291,14 +291,12 @@ generateWebsiteStructuredData();
                             <article class="post-card fade-in">
                                 <!-- Post Image -->
                                 <div class="post-card-image">
-                                    <?php 
-                                    $cardImagePath = null;
-                                    if ($post['slug'] === 'apple-airpods-4-review-2024') {
-                                        $cardImagePath = '/assets/images/airpods-4-hero.svg';
-                                    }
-                                    
-                                    if ($cardImagePath): ?>
-                                        <img src="<?php echo $cardImagePath; ?>" alt="<?php echo htmlspecialchars($post['title']); ?>">
+                                    <?php if (!empty($post['hero_image_url'])): ?>
+                                        <img src="<?php echo htmlspecialchars($post['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>">
+                                    <?php else: ?>
+                                        <div style="width: 100%; height: 200px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+                                            <?php echo strtoupper(substr($post['title'], 0, 1)); ?>
+                                        </div>
                                     <?php endif; ?>
                                     
                                     <span class="post-card-badge">Review</span>
@@ -398,14 +396,8 @@ generateWebsiteStructuredData();
                         <?php foreach ($recentPosts as $recent): ?>
                         <li class="recent-post-item">
                             <div class="recent-post-thumb">
-                                <?php 
-                                $thumbPath = null;
-                                if ($recent['slug'] === 'apple-airpods-4-review-2024') {
-                                    $thumbPath = '/assets/images/airpods-4-hero.svg';
-                                }
-                                
-                                if ($thumbPath): ?>
-                                    <img src="<?php echo $thumbPath; ?>" alt="<?php echo htmlspecialchars($recent['title']); ?>">
+                                <?php if (!empty($recent['hero_image_url'])): ?>
+                                    <img src="<?php echo htmlspecialchars($recent['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($recent['title']); ?>">
                                 <?php else: ?>
                                     <div class="recent-post-thumb-placeholder">
                                         <?php echo strtoupper(substr($recent['title'], 0, 1)); ?>

@@ -277,5 +277,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // ============================================
+    // View Switching (Grid/List)
+    // ============================================
+    const viewButtons = document.querySelectorAll('.view-btn');
+    const postsContainer = document.getElementById('postsContainer');
+    
+    console.log('View buttons found:', viewButtons.length);
+    console.log('Posts container found:', !!postsContainer);
+    
+    if (viewButtons.length > 0 && postsContainer) {
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const view = this.getAttribute('data-view');
+                console.log('View button clicked:', view);
+                
+                // Update active button
+                viewButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update container classes
+                if (view === 'list') {
+                    postsContainer.classList.remove('grid', 'grid-2');
+                    postsContainer.classList.add('list-view');
+                    console.log('Switched to list view');
+                } else {
+                    postsContainer.classList.remove('list-view');
+                    postsContainer.classList.add('grid', 'grid-2');
+                    console.log('Switched to grid view');
+                }
+                
+                // Store preference in localStorage
+                localStorage.setItem('postsView', view);
+            });
+        });
+        
+        // Restore saved view preference
+        const savedView = localStorage.getItem('postsView');
+        if (savedView) {
+            const targetButton = document.querySelector(`[data-view="${savedView}"]`);
+            if (targetButton) {
+                targetButton.click();
+            }
+        }
+    }
+    
     console.log('✨ Pixarboy CMS initialized successfully!');
 });
