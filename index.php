@@ -62,14 +62,8 @@ generateWebsiteStructuredData();
     <div class="container">
         <div class="featured-hero-content">
             <div class="featured-hero-image">
-                <?php 
-                $heroImagePath = null;
-                if ($featuredPost['slug'] === 'apple-airpods-4-review-2024') {
-                    $heroImagePath = '/assets/images/airpods-4-hero.svg';
-                }
-                
-                if ($heroImagePath): ?>
-                    <img src="<?php echo $heroImagePath; ?>" alt="<?php echo htmlspecialchars($featuredPost['title']); ?>">
+                <?php if (!empty($featuredPost['hero_image_url'])): ?>
+                    <img src="<?php echo htmlspecialchars($featuredPost['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($featuredPost['title']); ?>">
                 <?php else: ?>
                     <div class="featured-placeholder"></div>
                 <?php endif; ?>
