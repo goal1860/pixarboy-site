@@ -15,7 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $excerpt = sanitize($_POST['excerpt']);
         $status = $_POST['status'];
         $productId = !empty($_POST['product_id']) ? $_POST['product_id'] : null;
-        $authorId = $_SESSION['user_id'];
+        
+        // Allow admins to change author, otherwise use current user
+        if (isAdmin() && !empty($_POST['author_id'])) {
+            $authorId = intval($_POST['author_id']);
+        } else {
+            $authorId = $_SESSION['user_id'];
+        }
         
         try {
             if ($action === 'new') {
@@ -23,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$title, $slug, $content, $excerpt, $status, $authorId, $productId]);
                 showMessage('Content created successfully!', 'success');
             } else {
-                $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, status=?, product_id=? WHERE id=?");
-                $stmt->execute([$title, $slug, $content, $excerpt, $status, $productId, $contentId]);
+                $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, status=?, author_id=?, product_id=? WHERE id=?");
+                $stmt->execute([$title, $slug, $content, $excerpt, $status, $authorId, $productId, $contentId]);
                 showMessage('Content updated successfully!', 'success');
             }
             redirect('/admin/content.php');
@@ -64,6 +70,10 @@ if ($action === 'list') {
 // Get all products for the dropdown
 $stmt = $pdo->query("SELECT id, name FROM products WHERE status = 'active' ORDER BY name");
 $allProducts = $stmt->fetchAll();
+
+// Get all users for author dropdown (admins only)
+$stmt = $pdo->query("SELECT id, username, email FROM users ORDER BY username");
+$allUsers = $stmt->fetchAll();
 
 $pageTitle = ucfirst($action) . ' Content';
 include __DIR__ . '/../includes/header.php';
@@ -213,6 +223,26 @@ include __DIR__ . '/../includes/header.php';
                 ><?php echo isset($item) ? htmlspecialchars($item['excerpt']) : ''; ?></textarea>
                 <small style="color: var(--text-light);">Optional short description (recommended for better engagement)</small>
             </div>
+            
+            <?php if (isAdmin()): ?>
+            <div class="form-group">
+                <label for="author_id">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                    Author
+                </label>
+                <select id="author_id" name="author_id" class="form-control">
+                    <?php foreach ($allUsers as $user): ?>
+                        <option value="<?php echo $user['id']; ?>" 
+                                <?php echo (isset($item) && $item['author_id'] == $user['id']) || (!isset($item) && $user['id'] == $_SESSION['user_id']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($user['username']); ?> (<?php echo htmlspecialchars($user['email']); ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small style="color: var(--text-light);">Select the author for this content (Admin only)</small>
+            </div>
+            <?php endif; ?>
             
             <div class="form-group">
                 <label for="product_id">
