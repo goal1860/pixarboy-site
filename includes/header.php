@@ -23,6 +23,11 @@
     }
     ?></title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/images/favicon-96x96.png">
+    <link rel="shortcut icon" href="/assets/images/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="/assets/images/favicon-96x96.png">
+    
     <?php 
     // Include SEO helpers and generate meta tags
     require_once __DIR__ . '/seo.php';
