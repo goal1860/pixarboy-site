@@ -331,14 +331,14 @@ include __DIR__ . '/../includes/header.php';
                     Product Image URL
                 </label>
                 <input 
-                    type="url" 
+                    type="text" 
                     id="image_url" 
                     name="image_url" 
                     class="form-control" 
-                    placeholder="https://example.com/product-image.jpg"
+                    placeholder="https://example.com/image.jpg or /assets/images/image.jpg"
                     value="<?php echo isset($item) ? htmlspecialchars($item['image_url']) : ''; ?>"
                 >
-                <small style="color: var(--text-light);">Direct link to product image</small>
+                <small style="color: var(--text-light);">Full URL or relative path (e.g., /assets/images/product.jpg)</small>
             </div>
             
             <div class="form-group">

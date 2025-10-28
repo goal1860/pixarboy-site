@@ -230,7 +230,9 @@ include __DIR__ . '/../includes/header.php';
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <small style="color: var(--text-light);">Optional: Link this content to a product review</small>
+                <small style="color: var(--text-light);">
+                    Link this review to a product. The product's affiliate link will be used for the "Buy on Amazon" button.
+                </small>
             </div>
             
             <div class="form-group">

@@ -12,11 +12,13 @@ if (!$slug) {
     redirect('/');
 }
 
-// Get post by slug
+// Get post by slug with linked product info
 $pdo = getDBConnection();
-$stmt = $pdo->prepare("SELECT c.*, u.username as author, u.email as author_email 
+$stmt = $pdo->prepare("SELECT c.*, u.username as author, u.email as author_email,
+                       p.name as product_name, p.affiliate_link as product_link, p.slug as product_slug
                        FROM content c 
                        LEFT JOIN users u ON c.author_id = u.id 
+                       LEFT JOIN products p ON c.product_id = p.id
                        WHERE c.slug = ? AND c.status = 'published'");
 $stmt->execute([$slug]);
 $post = $stmt->fetch();
@@ -103,6 +105,26 @@ include __DIR__ . '/includes/header.php';
                 </div>
             <?php endif; ?>
         </div>
+        
+        <!-- Buy Button (if linked product has affiliate link) -->
+        <?php if (!empty($post['product_link'])): ?>
+            <div style="text-align: center; margin: 2rem 0;">
+                <a href="<?php echo htmlspecialchars($post['product_link']); ?>" 
+                   class="btn btn-gradient" 
+                   target="_blank" 
+                   rel="nofollow noopener"
+                   style="display: inline-flex; align-items: center; gap: 0.75rem; font-size: 1.125rem; padding: 1rem 2rem;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                    </svg>
+                    Buy on Amazon
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
+                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/>
+                    </svg>
+                </a>
+            </div>
+        <?php endif; ?>
         
         <!-- Post Content -->
         <div class="post-content card" style="font-size: 1.125rem; line-height: 1.8;">
