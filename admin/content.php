@@ -20,6 +20,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $_POST['status'];
         $productId = !empty($_POST['product_id']) ? $_POST['product_id'] : null;
         
+        // Handle hero image upload
+        if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . '/../assets/images/';
+            
+            // Create directory if it doesn't exist
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            $file = $_FILES['hero_image'];
+            $fileName = $file['name'];
+            $fileTmpName = $file['tmp_name'];
+            $fileSize = $file['size'];
+            $fileError = $file['error'];
+            
+            // Get file extension
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            
+            // Allowed file types
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+            
+            if (in_array($fileExt, $allowed)) {
+                if ($fileError === 0) {
+                    if ($fileSize < 5000000) { // 5MB limit
+                        // Generate unique filename
+                        $newFileName = uniqid() . '_' . time() . '.' . $fileExt;
+                        $fileDestination = $uploadDir . $newFileName;
+                        
+                        if (move_uploaded_file($fileTmpName, $fileDestination)) {
+                            $heroImageUrl = '/assets/images/' . $newFileName;
+                        } else {
+                            $error = 'Failed to upload image.';
+                        }
+                    } else {
+                        $error = 'File too large. Maximum size is 5MB.';
+                    }
+                } else {
+                    $error = 'Error uploading file.';
+                }
+            } else {
+                $error = 'Invalid file type. Allowed: ' . implode(', ', $allowed);
+            }
+        }
+        
         // Allow admins to change author, otherwise use current user
         if (isAdmin() && !empty($_POST['author_id'])) {
             $authorId = intval($_POST['author_id']);
@@ -191,7 +235,7 @@ include __DIR__ . '/../includes/header.php';
             <div class="alert alert-error"><?php echo $error; ?></div>
         <?php endif; ?>
         
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="title">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
@@ -229,21 +273,57 @@ include __DIR__ . '/../includes/header.php';
             </div>
             
             <div class="form-group">
-                <label for="hero_image_url">
+                <label for="hero_image">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
                         <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
                     </svg>
-                    Hero Image URL
+                    Hero Image
                 </label>
-                <input 
-                    type="text" 
-                    id="hero_image_url" 
-                    name="hero_image_url" 
-                    class="form-control" 
-                    placeholder="/assets/images/hero.jpg or https://example.com/image.jpg"
-                    value="<?php echo isset($item) ? htmlspecialchars($item['hero_image_url']) : ''; ?>"
-                >
-                <small style="color: var(--text-light);">Full URL or relative path for the featured image</small>
+                
+                <!-- Image Upload -->
+                <div style="margin-bottom: 1rem;">
+                    <input 
+                        type="file" 
+                        id="hero_image" 
+                        name="hero_image" 
+                        class="form-control" 
+                        accept="image/*"
+                        onchange="previewImage(this)"
+                    >
+                    <small style="color: var(--text-light);">Upload an image (JPG, PNG, GIF, WebP, SVG) - Max 5MB</small>
+                </div>
+                
+                <!-- Image Preview -->
+                <div id="image-preview" style="margin-bottom: 1rem; display: none;">
+                    <img id="preview-img" src="" alt="Preview" style="max-width: 300px; max-height: 200px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                </div>
+                
+                <!-- Current Image Display -->
+                <?php if (isset($item) && !empty($item['hero_image_url'])): ?>
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-weight: 600; color: var(--text-color);">Current Image:</label>
+                    <div style="margin-top: 0.5rem;">
+                        <img src="<?php echo htmlspecialchars($item['hero_image_url']); ?>" 
+                             alt="Current hero image" 
+                             style="max-width: 300px; max-height: 200px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Manual URL Input -->
+                <div>
+                    <label for="hero_image_url" style="font-weight: 600; color: var(--text-color);">Or enter image URL:</label>
+                    <input 
+                        type="text" 
+                        id="hero_image_url" 
+                        name="hero_image_url" 
+                        class="form-control" 
+                        placeholder="/assets/images/hero.jpg or https://example.com/image.jpg"
+                        value="<?php echo isset($item) ? htmlspecialchars($item['hero_image_url']) : ''; ?>"
+                        style="margin-top: 0.5rem;"
+                    >
+                    <small style="color: var(--text-light);">Full URL or relative path for the featured image</small>
+                </div>
             </div>
             
             <?php if (isAdmin()): ?>
@@ -339,5 +419,25 @@ include __DIR__ . '/../includes/header.php';
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.style.display = 'none';
+    }
+}
+</script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
