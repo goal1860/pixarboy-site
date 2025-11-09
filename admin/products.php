@@ -38,11 +38,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = 'Product updated successfully!';
             }
             
-            // Insert product categories
+            // Insert product categories - ensure category IDs are integers
             if (!empty($categoryIds)) {
+                // Debug: Log what categories are being submitted
+                $submittedCategories = [];
+                foreach ($categoryIds as $catId) {
+                    $submittedCategories[] = (int)$catId;
+                }
+                error_log("Product $productId: Submitting categories: " . implode(', ', $submittedCategories));
+                
                 $stmt = $pdo->prepare("INSERT INTO product_categories (product_id, category_id) VALUES (?, ?)");
                 foreach ($categoryIds as $categoryId) {
-                    $stmt->execute([$productId, $categoryId]);
+                    // Cast to integer to ensure proper type
+                    $categoryId = (int)$categoryId;
+                    // Validate category exists and get its info for debugging
+                    $checkStmt = $pdo->prepare("SELECT id, name, parent_id FROM categories WHERE id = ?");
+                    $checkStmt->execute([$categoryId]);
+                    $categoryInfo = $checkStmt->fetch();
+                    if ($categoryInfo) {
+                        $stmt->execute([$productId, $categoryId]);
+                        error_log("Product $productId: Assigned category ID $categoryId ({$categoryInfo['name']}, parent: " . ($categoryInfo['parent_id'] ?: 'none') . ")");
+                    } else {
+                        // Log invalid category ID (shouldn't happen, but helps debug)
+                        error_log("Product $productId: Invalid category ID attempted: $categoryId");
+                    }
                 }
             }
             
@@ -87,10 +106,10 @@ if ($action === 'edit' && $productId) {
         redirect('/admin/products.php');
     }
     
-    // Get product categories
+    // Get product categories - ensure they're integers for proper comparison
     $stmt = $pdo->prepare("SELECT category_id FROM product_categories WHERE product_id = ?");
     $stmt->execute([$productId]);
-    $productCategories = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $productCategories = array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN));
 }
 
 // Get all products with category count
@@ -106,13 +125,52 @@ if ($action === 'list') {
 }
 
 // Get all categories for the form (hierarchical)
+// CRITICAL: Order must ensure children come immediately after their parent
+// The form rendering logic expects: Parent, then its children, then next parent, etc.
 $stmt = $pdo->query("
-    SELECT c.*, parent.name as parent_name
+    SELECT c.*, parent.name as parent_name, parent.id as parent_category_id
     FROM categories c
     LEFT JOIN categories parent ON c.parent_id = parent.id
-    ORDER BY COALESCE(c.parent_id, c.id), c.display_order, c.name
+    ORDER BY 
+        COALESCE(c.parent_id, c.id),
+        CASE WHEN c.parent_id IS NULL THEN 0 ELSE 1 END,
+        c.display_order,
+        c.name
 ");
 $allCategories = $stmt->fetchAll();
+
+// Reorganize categories to ensure proper parent-child grouping
+// This ensures children appear immediately after their parent, even if SQL ordering is inconsistent
+$organizedCategories = [];
+$parentCategories = [];
+$childCategories = [];
+
+// Separate parents and children
+foreach ($allCategories as $cat) {
+    if ($cat['parent_id'] === null) {
+        $parentCategories[] = $cat;
+    } else {
+        $childCategories[] = $cat;
+    }
+}
+
+// Sort parent categories by ID to ensure consistent ordering
+usort($parentCategories, function($a, $b) {
+    return (int)$a['id'] - (int)$b['id'];
+});
+
+// Build organized list: parent, then its children, then next parent, etc.
+foreach ($parentCategories as $parent) {
+    $organizedCategories[] = $parent;
+    // Add all children of this parent (already sorted by SQL query)
+    foreach ($childCategories as $child) {
+        if ((int)$child['parent_id'] === (int)$parent['id']) {
+            $organizedCategories[] = $child;
+        }
+    }
+}
+
+$allCategories = $organizedCategories;
 
 $pageTitle = ucfirst($action) . ' Products';
 include __DIR__ . '/../includes/header.php';
@@ -254,7 +312,7 @@ include __DIR__ . '/../includes/header.php';
             <div class="alert alert-error"><?php echo $error; ?></div>
         <?php endif; ?>
         
-        <form method="POST">
+        <form method="POST" onsubmit="return validateCategorySelection(this);">
             <div class="form-group">
                 <label for="name">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
@@ -391,8 +449,12 @@ include __DIR__ . '/../includes/header.php';
                     <?php 
                     $currentParent = null;
                     foreach ($allCategories as $cat): 
-                        $isChecked = isset($productCategories) && in_array($cat['id'], $productCategories);
+                        // Ensure both values are integers for proper comparison
+                        $catId = (int)$cat['id'];
+                        $isChecked = isset($productCategories) && in_array($catId, $productCategories, true);
                         $isParent = $cat['parent_id'] === null;
+                        // Get parent ID for validation
+                        $parentId = $cat['parent_id'] ? (int)$cat['parent_id'] : null;
                     ?>
                         <?php if ($isParent): ?>
                             <?php if ($currentParent !== null): ?>
@@ -400,29 +462,39 @@ include __DIR__ . '/../includes/header.php';
                             <?php endif; ?>
                             <div style="margin-bottom: 1rem;">
                                 <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-color);">
-                                    <label style="cursor: pointer;">
+                                    <label style="cursor: pointer;" title="Category ID: <?php echo $catId; ?>">
                                         <input 
                                             type="checkbox" 
                                             name="categories[]" 
-                                            value="<?php echo $cat['id']; ?>"
+                                            value="<?php echo $catId; ?>"
+                                            id="cat_<?php echo $catId; ?>"
+                                            data-cat-id="<?php echo $catId; ?>"
+                                            data-cat-name="<?php echo htmlspecialchars($cat['name']); ?>"
                                             <?php echo $isChecked ? 'checked' : ''; ?>
                                             style="margin-right: 0.5rem;"
                                         >
                                         <?php echo htmlspecialchars($cat['name']); ?>
                                     </label>
                                 </div>
-                            <?php $currentParent = $cat['id']; ?>
+                            <?php $currentParent = $catId; ?>
                         <?php else: ?>
                             <div style="margin-left: 1.5rem; margin-bottom: 0.25rem;">
-                                <label style="cursor: pointer; font-weight: normal;">
+                                <label style="cursor: pointer; font-weight: normal;" title="Category ID: <?php echo $catId; ?>, Parent ID: <?php echo $parentId; ?>">
                                     <input 
                                         type="checkbox" 
                                         name="categories[]" 
-                                        value="<?php echo $cat['id']; ?>"
+                                        value="<?php echo $catId; ?>"
+                                        id="cat_<?php echo $catId; ?>"
+                                        data-cat-id="<?php echo $catId; ?>"
+                                        data-cat-name="<?php echo htmlspecialchars($cat['name']); ?>"
+                                        data-parent-id="<?php echo $parentId; ?>"
                                         <?php echo $isChecked ? 'checked' : ''; ?>
                                         style="margin-right: 0.5rem;"
                                     >
                                     <?php echo htmlspecialchars($cat['name']); ?>
+                                    <?php if ($cat['parent_name']): ?>
+                                        <span style="color: var(--text-light); font-size: 0.85em;">(<?php echo htmlspecialchars($cat['parent_name']); ?>)</span>
+                                    <?php endif; ?>
                                 </label>
                             </div>
                         <?php endif; ?>
@@ -468,6 +540,47 @@ include __DIR__ . '/../includes/header.php';
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+function validateCategorySelection(form) {
+    // Debug: Log all selected categories before submission
+    const checkboxes = form.querySelectorAll('input[name="categories[]"]:checked');
+    const selectedCategories = [];
+    checkboxes.forEach(function(cb) {
+        const catId = cb.value;
+        const catName = cb.getAttribute('data-cat-name') || 'Unknown';
+        const parentId = cb.getAttribute('data-parent-id') || 'none';
+        selectedCategories.push({
+            id: catId,
+            name: catName,
+            parentId: parentId
+        });
+        console.log('Selected category:', catId, '-', catName, '(Parent ID:', parentId + ')');
+    });
+    
+    if (selectedCategories.length === 0) {
+        console.warn('No categories selected');
+    } else {
+        console.log('Total categories selected:', selectedCategories.length);
+    }
+    
+    return true; // Allow form submission
+}
+
+// Also log on page load which categories are checked
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[name="categories[]"]:checked');
+    if (checkboxes.length > 0) {
+        console.log('Currently checked categories:');
+        checkboxes.forEach(function(cb) {
+            const catId = cb.value;
+            const catName = cb.getAttribute('data-cat-name') || 'Unknown';
+            const parentId = cb.getAttribute('data-parent-id') || 'none';
+            console.log('  - ID:', catId, 'Name:', catName, 'Parent ID:', parentId);
+        });
+    }
+});
+</script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 
