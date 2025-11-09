@@ -68,6 +68,6 @@
         </div>
     </footer>
     
-    <script src="/assets/js/main.js"></script>
+    <script src="<?php echo getAssetPath('js', 'main'); ?>"></script>
 </body>
 </html>
