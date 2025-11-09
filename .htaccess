@@ -16,6 +16,9 @@
     # Category URLs: /category/slug
     RewriteRule ^category/([a-zA-Z0-9\-]+)/?$ category.php?slug=$1 [L,QSA]
     
+    # Search URLs: /search
+    RewriteRule ^search/?$ search.php [L,QSA]
+    
     # Sitemap rewrite
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
     
