@@ -44,7 +44,7 @@
                 <div class="footer-section">
                     <h3>Resources</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Documentation</a></li>
+                        <li><a href="/post/ces-2025-highlights-the-future-of-technology-is-here">CES Updates</a></li>
                         <li><a href="#">Tutorials</a></li>
                         <li><a href="#">Support</a></li>
                         <li><a href="#">API Reference</a></li>
