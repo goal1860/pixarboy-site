@@ -1184,11 +1184,12 @@ select.form-control {
     padding: 0.35rem 0.5rem;
 }
 
+.admin-content-action-btn svg,
 .admin-content-action-icon {
-    display: inline-block;
-    vertical-align: middle;
-    width: 12px;
-    height: 12px;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    width: 12px !important;
+    height: 12px !important;
 }
 
 .admin-content-summary {
