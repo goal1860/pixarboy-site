@@ -1183,7 +1183,12 @@ select.form-control {
 }
 
 .admin-content-action-btn {
-    padding: 0.35rem 0.5rem;
+    padding: 0.25rem 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: auto;
+    min-height: auto;
 }
 
 .admin-content-action-btn svg,
@@ -1192,6 +1197,9 @@ select.form-control {
     vertical-align: middle !important;
     width: 12px !important;
     height: 12px !important;
+    flex-shrink: 0;
+    max-width: 12px;
+    max-height: 12px;
 }
 
 .admin-content-summary {
