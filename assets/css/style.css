@@ -1993,6 +1993,139 @@ select.form-control {
     color: white;
 }
 
+.page-hero a {
+    color: rgba(255, 255, 255, 0.85);
+    transition: color 0.3s ease;
+}
+
+.page-hero a:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.page-hero h1,
+.page-hero h2,
+.page-hero h3 {
+    color: white;
+}
+
+.page-hero p {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* Category Page Styles */
+.page-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.page-hero-breadcrumb {
+    margin-bottom: 0.5rem;
+}
+
+.page-hero-breadcrumb-separator {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0.5rem;
+}
+
+.page-hero-breadcrumb-text {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.page-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-hero-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.page-hero-stats {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.category-section {
+    margin-bottom: 3rem;
+}
+
+.category-section-title {
+    margin-bottom: 1.5rem;
+}
+
+.subcategory-card {
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.subcategory-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.subcategory-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subcategory-description {
+    color: var(--text-light);
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-rating-star {
+    color: #fbbf24;
+}
+
+.product-price-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.product-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.product-image-placeholder {
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.category-content {
+    margin-top: 3rem;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }

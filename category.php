@@ -66,26 +66,24 @@ include __DIR__ . '/includes/header.php';
 <!-- Category Hero -->
 <div class="page-hero">
     <div class="container">
-        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <div class="page-hero-content">
             <?php if ($category['parent_name']): ?>
-                <div style="margin-bottom: 0.5rem;">
-                    <a href="/" style="color: var(--text-light); text-decoration: none;">Home</a>
-                    <span style="color: var(--text-light); margin: 0 0.5rem;">›</span>
-                    <span style="color: var(--text-light);"><?php echo htmlspecialchars($category['parent_name']); ?></span>
+                <div class="page-hero-breadcrumb">
+                    <a href="/">Home</a>
+                    <span class="page-hero-breadcrumb-separator">›</span>
+                    <span class="page-hero-breadcrumb-text"><?php echo htmlspecialchars($category['parent_name']); ?></span>
                 </div>
             <?php endif; ?>
             
-            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">
-                <?php echo htmlspecialchars($category['name']); ?>
-            </h1>
+            <h1><?php echo htmlspecialchars($category['name']); ?></h1>
             
             <?php if ($category['description']): ?>
-                <p style="font-size: 1.125rem; color: var(--text-light);">
+                <p class="page-hero-description">
                     <?php echo htmlspecialchars($category['description']); ?>
                 </p>
             <?php endif; ?>
             
-            <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 2rem; color: var(--text-light);">
+            <div class="page-hero-stats">
                 <span>📦 <?php echo count($products); ?> Products</span>
                 <span>•</span>
                 <span>📝 <?php echo count($posts); ?> Articles</span>
@@ -94,17 +92,16 @@ include __DIR__ . '/includes/header.php';
     </div>
 </div>
 
-<div class="container" style="margin-top: 3rem;">
+<div class="container category-content">
     <!-- Subcategories -->
     <?php if (!empty($subcategories)): ?>
-        <div style="margin-bottom: 3rem;">
-            <h2 style="margin-bottom: 1.5rem;">Browse by Subcategory</h2>
+        <div class="category-section">
+            <h2 class="category-section-title">Browse by Subcategory</h2>
             <div class="posts-grid">
                 <?php foreach ($subcategories as $sub): ?>
                     <a href="/category.php?slug=<?php echo htmlspecialchars($sub['slug']); ?>" 
-                       class="card" 
-                       style="text-decoration: none; color: inherit; text-align: center; padding: 2rem; transition: all 0.3s ease; cursor: pointer;">
-                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                       class="card subcategory-card">
+                        <div class="subcategory-icon">
                             <?php
                             // Simple icon mapping
                             $icons = [
@@ -118,7 +115,7 @@ include __DIR__ . '/includes/header.php';
                         </div>
                         <h3><?php echo htmlspecialchars($sub['name']); ?></h3>
                         <?php if ($sub['description']): ?>
-                            <p style="color: var(--text-light); margin-top: 0.5rem; font-size: 0.875rem;">
+                            <p class="subcategory-description">
                                 <?php echo htmlspecialchars($sub['description']); ?>
                             </p>
                         <?php endif; ?>
@@ -130,8 +127,8 @@ include __DIR__ . '/includes/header.php';
     
     <!-- Products -->
     <?php if (!empty($products)): ?>
-        <div style="margin-bottom: 3rem;">
-            <h2 style="margin-bottom: 1.5rem;">🛍️ Featured Products</h2>
+        <div class="category-section">
+            <h2 class="category-section-title">🛍️ Featured Products</h2>
             <div class="posts-grid">
                 <?php foreach ($products as $product): ?>
                     <article class="post-card product-card">
@@ -141,15 +138,15 @@ include __DIR__ . '/includes/header.php';
                                      alt="<?php echo htmlspecialchars($product['name']); ?>">
                             </a>
                         <?php else: ?>
-                            <div class="post-image" style="background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
+                            <div class="post-image product-image-placeholder">
                                 <?php echo strtoupper(substr($product['name'], 0, 2)); ?>
                             </div>
                         <?php endif; ?>
                         
                         <div class="post-body">
                             <?php if ($product['rating'] > 0): ?>
-                                <div style="display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.5rem;">
-                                    <span style="color: #fbbf24;">⭐</span>
+                                <div class="product-rating">
+                                    <span class="product-rating-star">⭐</span>
                                     <strong><?php echo number_format($product['rating'], 1); ?></strong>
                                 </div>
                             <?php endif; ?>
@@ -166,9 +163,9 @@ include __DIR__ . '/includes/header.php';
                                 </p>
                             <?php endif; ?>
                             
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <div class="product-price-wrapper">
                                 <?php if ($product['price']): ?>
-                                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary-color);">
+                                    <div class="product-price">
                                         <?php echo htmlspecialchars($product['currency']); ?> <?php echo number_format($product['price'], 2); ?>
                                     </div>
                                 <?php else: ?>
@@ -196,8 +193,8 @@ include __DIR__ . '/includes/header.php';
     
     <!-- Related Posts -->
     <?php if (!empty($posts)): ?>
-        <div style="margin-bottom: 3rem;">
-            <h2 style="margin-bottom: 1.5rem;">📝 Related Articles</h2>
+        <div class="category-section">
+            <h2 class="category-section-title">📝 Related Articles</h2>
             <div class="posts-grid">
                 <?php foreach (array_slice($posts, 0, 6) as $post): ?>
                     <article class="post-card">
