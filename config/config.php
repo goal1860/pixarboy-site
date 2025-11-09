@@ -20,7 +20,7 @@ if (file_exists($envFile)) {
 }
 
 // Asset versioning (increment this when assets change)
-define('ASSET_VERSION', '1.0.0');
+define('ASSET_VERSION', '1.0.1');
 
 // Include database configuration
 require_once __DIR__ . '/database.php';
