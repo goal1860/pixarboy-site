@@ -4,18 +4,32 @@ require_once __DIR__ . '/config/config.php';
 // Get published content
 $pdo = getDBConnection();
 
-// Get all published posts
+// Get all published posts (reviews and articles)
 $stmt = $pdo->query("SELECT c.*, u.username as author FROM content c 
                       LEFT JOIN users u ON c.author_id = u.id 
                       WHERE c.status = 'published' 
                       ORDER BY c.created_at DESC");
 $allPosts = $stmt->fetchAll();
 
-// Get featured post (most recent)
-$featuredPost = !empty($allPosts) ? $allPosts[0] : null;
+// Get published reviews only (posts with product_id assigned)
+$stmt = $pdo->query("SELECT c.*, u.username as author FROM content c 
+                      LEFT JOIN users u ON c.author_id = u.id 
+                      WHERE c.status = 'published' AND c.product_id IS NOT NULL
+                      ORDER BY c.created_at DESC");
+$reviews = $stmt->fetchAll();
 
-// Get remaining posts (all posts for the grid, excluding featured)
+// Get featured post (most recent review)
+$featuredPost = !empty($reviews) ? $reviews[0] : null;
+
+// Get remaining posts (all posts for the grid, excluding featured review if it exists)
 $remainingPosts = $allPosts;
+if ($featuredPost) {
+    // Remove the featured review from the remaining posts list
+    $remainingPosts = array_filter($allPosts, function($post) use ($featuredPost) {
+        return $post['id'] != $featuredPost['id'];
+    });
+    $remainingPosts = array_values($remainingPosts); // Re-index array
+}
 
 // Get recent posts for sidebar
 $recentPosts = array_slice($allPosts, 0, 5);
@@ -299,7 +313,11 @@ generateWebsiteStructuredData();
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <span class="post-card-badge">Review</span>
+                                    <?php if ($post['product_id']): ?>
+                                        <span class="post-card-badge">Review</span>
+                                    <?php else: ?>
+                                        <span class="post-card-badge">Article</span>
+                                    <?php endif; ?>
                                 </div>
                                 
                                 <!-- Post Content -->
