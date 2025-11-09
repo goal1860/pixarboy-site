@@ -1116,6 +1116,8 @@ select.form-control {
     display: block;
     word-break: break-word;
     line-height: 1.4;
+    font-weight: normal;
+    font-size: 0.9rem;
 }
 
 .admin-content-tags-container {

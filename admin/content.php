@@ -247,7 +247,7 @@ include __DIR__ . '/../includes/header.php';
                         <?php foreach ($contentList as $c): ?>
                         <tr>
                             <td>
-                                <strong class="admin-content-title"><?php echo htmlspecialchars($c['title']); ?></strong>
+                                <span class="admin-content-title"><?php echo htmlspecialchars($c['title']); ?></span>
                             </td>
                             <td>
                                 <?php if (!empty($c['tags'])): ?>
