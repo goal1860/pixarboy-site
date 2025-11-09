@@ -72,17 +72,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         try {
+            $pdo->beginTransaction();
+            
             if ($action === 'new') {
                 $stmt = $pdo->prepare("INSERT INTO content (title, slug, content, excerpt, hero_image_url, status, author_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $slug, $content, $excerpt, $heroImageUrl, $status, $authorId, $productId]);
+                $contentId = $pdo->lastInsertId();
                 showMessage('Content created successfully!', 'success');
             } else {
                 $stmt = $pdo->prepare("UPDATE content SET title=?, slug=?, content=?, excerpt=?, hero_image_url=?, status=?, author_id=?, product_id=? WHERE id=?");
                 $stmt->execute([$title, $slug, $content, $excerpt, $heroImageUrl, $status, $authorId, $productId, $contentId]);
                 showMessage('Content updated successfully!', 'success');
             }
+            
+            // Handle tags
+            $tagIds = [];
+            if (!empty($_POST['tags'])) {
+                // Handle both comma-separated string and array
+                $tagInput = $_POST['tags'];
+                if (is_string($tagInput)) {
+                    $tagNames = array_map('trim', explode(',', $tagInput));
+                } else {
+                    $tagNames = array_map('trim', $tagInput);
+                }
+                $tagNames = array_filter($tagNames, function($name) {
+                    return !empty($name);
+                });
+                
+                foreach ($tagNames as $tagName) {
+                    $tagName = sanitize($tagName);
+                    if (empty($tagName)) continue;
+                    
+                    // Generate slug from tag name
+                    $tagSlug = strtolower(trim(preg_replace('/[^a-z0-9\s-]/', '', strtolower($tagName))));
+                    $tagSlug = preg_replace('/[\s-]+/', '-', $tagSlug);
+                    $tagSlug = trim($tagSlug, '-');
+                    
+                    // Check if tag exists
+                    $stmt = $pdo->prepare("SELECT id FROM tags WHERE slug = ?");
+                    $stmt->execute([$tagSlug]);
+                    $existingTag = $stmt->fetch();
+                    
+                    if ($existingTag) {
+                        $tagIds[] = $existingTag['id'];
+                    } else {
+                        // Create new tag
+                        $stmt = $pdo->prepare("INSERT INTO tags (name, slug) VALUES (?, ?)");
+                        $stmt->execute([$tagName, $tagSlug]);
+                        $tagIds[] = $pdo->lastInsertId();
+                    }
+                }
+            }
+            
+            // Delete existing content_tags for this content
+            $stmt = $pdo->prepare("DELETE FROM content_tags WHERE content_id = ?");
+            $stmt->execute([$contentId]);
+            
+            // Insert new content_tags
+            if (!empty($tagIds)) {
+                $stmt = $pdo->prepare("INSERT INTO content_tags (content_id, tag_id) VALUES (?, ?)");
+                foreach ($tagIds as $tagId) {
+                    $stmt->execute([$contentId, $tagId]);
+                }
+            }
+            
+            $pdo->commit();
             redirect('/admin/content.php');
         } catch (PDOException $e) {
+            $pdo->rollBack();
             $error = 'Error: ' . $e->getMessage();
         }
     }
@@ -104,6 +161,16 @@ if ($action === 'edit' && $contentId) {
     if (!$item) {
         redirect('/admin/content.php');
     }
+    
+    // Get existing tags for this content
+    $stmt = $pdo->prepare("SELECT t.id, t.name FROM tags t 
+                          INNER JOIN content_tags ct ON t.id = ct.tag_id 
+                          WHERE ct.content_id = ? 
+                          ORDER BY t.name");
+    $stmt->execute([$contentId]);
+    $contentTags = $stmt->fetchAll();
+} else {
+    $contentTags = [];
 }
 
 // Get all content
@@ -113,6 +180,17 @@ if ($action === 'list') {
                          LEFT JOIN products p ON c.product_id = p.id
                          ORDER BY c.created_at DESC");
     $contentList = $stmt->fetchAll();
+    
+    // Get tags for each content item
+    foreach ($contentList as &$content) {
+        $stmt = $pdo->prepare("SELECT t.name FROM tags t 
+                              INNER JOIN content_tags ct ON t.id = ct.tag_id 
+                              WHERE ct.content_id = ? 
+                              ORDER BY t.name");
+        $stmt->execute([$content['id']]);
+        $content['tags'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+    unset($content);
 }
 
 // Get all products for the dropdown
@@ -122,6 +200,10 @@ $allProducts = $stmt->fetchAll();
 // Get all users for author dropdown (admins only)
 $stmt = $pdo->query("SELECT id, username, email FROM users ORDER BY username");
 $allUsers = $stmt->fetchAll();
+
+// Get all tags for autocomplete
+$stmt = $pdo->query("SELECT id, name, slug FROM tags ORDER BY name");
+$allTags = $stmt->fetchAll();
 
 $pageTitle = ucfirst($action) . ' Content';
 include __DIR__ . '/../includes/header.php';
@@ -156,6 +238,7 @@ include __DIR__ . '/../includes/header.php';
                         <tr>
                             <th>Title</th>
                             <th>Author</th>
+                            <th>Tags</th>
                             <th>Product</th>
                             <th>Status</th>
                             <th>Created</th>
@@ -172,6 +255,17 @@ include __DIR__ . '/../includes/header.php';
                                 <small style="color: var(--text-light);">/<?php echo htmlspecialchars($c['slug']); ?></small>
                             </td>
                             <td><?php echo htmlspecialchars($c['author']); ?></td>
+                            <td>
+                                <?php if (!empty($c['tags'])): ?>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+                                        <?php foreach ($c['tags'] as $tag): ?>
+                                            <span class="badge badge-info" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"><?php echo htmlspecialchars($tag); ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php else: ?>
+                                    <span style="color: var(--text-light);">—</span>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <?php if ($c['product_name']): ?>
                                     <span class="badge badge-info"><?php echo htmlspecialchars($c['product_name']); ?></span>
@@ -367,6 +461,33 @@ include __DIR__ . '/../includes/header.php';
                 </small>
             </div>
             
+            <div class="form-group" style="position: relative;">
+                <label for="tags-input">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                        <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                    </svg>
+                    Tags
+                </label>
+                <div id="tags-container" style="margin-bottom: 0.5rem; min-height: 40px; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; background: var(--bg-color);">
+                    <!-- Tags will be displayed here -->
+                </div>
+                <div style="position: relative;">
+                    <input 
+                        type="text" 
+                        id="tags-input" 
+                        class="form-control" 
+                        placeholder="Type a tag and press Enter or comma..."
+                        autocomplete="off"
+                        style="margin-top: 0.5rem;"
+                    >
+                    <div id="tags-autocomplete" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border-color); border-radius: 8px; max-height: 200px; overflow-y: auto; z-index: 1000; margin-top: 2px; box-shadow: var(--shadow-md);"></div>
+                </div>
+                <input type="hidden" id="tags" name="tags" value="">
+                <small style="color: var(--text-light);">
+                    Add tags to categorize your content. Type a tag name and press Enter or comma. Tags are created automatically if they don't exist.
+                </small>
+            </div>
+            
             <div class="form-group">
                 <label for="content">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
@@ -438,6 +559,150 @@ function previewImage(input) {
         preview.style.display = 'none';
     }
 }
+
+// Tag management
+(function() {
+    const tagsInput = document.getElementById('tags-input');
+    const tagsContainer = document.getElementById('tags-container');
+    const tagsHidden = document.getElementById('tags');
+    const tagsAutocomplete = document.getElementById('tags-autocomplete');
+    
+    if (!tagsInput) return; // Exit if not on edit/new page
+    
+    // Available tags for autocomplete
+    const availableTags = <?php echo json_encode(array_map(function($tag) { return ['id' => $tag['id'], 'name' => $tag['name']]; }, $allTags)); ?>;
+    
+    // Current tags
+    let currentTags = <?php echo json_encode(array_map(function($tag) { return $tag['name']; }, $contentTags)); ?>;
+    
+    // Initialize tags display
+    function updateTagsDisplay() {
+        tagsContainer.innerHTML = '';
+        if (currentTags.length === 0) {
+            const emptyMsg = document.createElement('span');
+            emptyMsg.textContent = 'No tags yet. Start typing to add tags...';
+            emptyMsg.style.color = 'var(--text-light)';
+            emptyMsg.style.fontStyle = 'italic';
+            tagsContainer.appendChild(emptyMsg);
+        } else {
+            currentTags.forEach(function(tagName, index) {
+                const tagElement = createTagElement(tagName);
+                tagsContainer.appendChild(tagElement);
+            });
+        }
+        updateHiddenInput();
+    }
+    
+    function createTagElement(tagName) {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'tag-badge';
+        tagDiv.style.cssText = 'display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem;';
+        
+        const tagText = document.createElement('span');
+        tagText.textContent = tagName;
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.innerHTML = '×';
+        removeBtn.style.cssText = 'background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; line-height: 1; padding: 0; margin-left: 0.25rem; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%;';
+        removeBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
+        removeBtn.onmouseout = function() { this.style.background = 'none'; };
+        removeBtn.onclick = function() {
+            removeTag(tagName);
+        };
+        
+        tagDiv.appendChild(tagText);
+        tagDiv.appendChild(removeBtn);
+        
+        return tagDiv;
+    }
+    
+    function addTag(tagName) {
+        tagName = tagName.trim();
+        if (!tagName || currentTags.includes(tagName)) {
+            return;
+        }
+        currentTags.push(tagName);
+        updateTagsDisplay();
+        tagsInput.value = '';
+        hideAutocomplete();
+    }
+    
+    function removeTag(tagName) {
+        currentTags = currentTags.filter(function(tag) {
+            return tag !== tagName;
+        });
+        updateTagsDisplay();
+    }
+    
+    function updateHiddenInput() {
+        tagsHidden.value = currentTags.join(',');
+    }
+    
+    function showAutocomplete(filter) {
+        if (!filter || filter.trim() === '') {
+            hideAutocomplete();
+            return;
+        }
+        
+        const filterLower = filter.toLowerCase();
+        const matches = availableTags.filter(function(tag) {
+            return tag.name.toLowerCase().includes(filterLower) && !currentTags.includes(tag.name);
+        }).slice(0, 10);
+        
+        if (matches.length === 0) {
+            hideAutocomplete();
+            return;
+        }
+        
+        tagsAutocomplete.innerHTML = '';
+        matches.forEach(function(tag) {
+            const item = document.createElement('div');
+            item.style.cssText = 'padding: 0.75rem; cursor: pointer; border-bottom: 1px solid var(--border-color);';
+            item.onmouseover = function() { this.style.background = 'var(--bg-hover)'; };
+            item.onmouseout = function() { this.style.background = 'white'; };
+            item.textContent = tag.name;
+            item.onclick = function() {
+                addTag(tag.name);
+            };
+            tagsAutocomplete.appendChild(item);
+        });
+        
+        // Autocomplete is already positioned relative to input container
+        tagsAutocomplete.style.display = 'block';
+    }
+    
+    function hideAutocomplete() {
+        tagsAutocomplete.style.display = 'none';
+    }
+    
+    // Event listeners
+    tagsInput.addEventListener('input', function() {
+        showAutocomplete(this.value);
+    });
+    
+    tagsInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            const value = this.value.trim();
+            if (value) {
+                addTag(value);
+            }
+        } else if (e.key === 'Escape') {
+            hideAutocomplete();
+        }
+    });
+    
+    tagsInput.addEventListener('blur', function() {
+        // Delay to allow click on autocomplete items
+        setTimeout(function() {
+            hideAutocomplete();
+        }, 200);
+    });
+    
+    // Initialize
+    updateTagsDisplay();
+})();
 </script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

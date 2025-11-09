@@ -48,6 +48,17 @@ $stmt = $pdo->query("SELECT * FROM categories
                       LIMIT 4");
 $topCategories = $stmt->fetchAll();
 
+// Get popular tags (tags used in published content, ordered by usage count)
+$stmt = $pdo->query("SELECT t.id, t.name, t.slug, COUNT(ct.content_id) as usage_count
+                      FROM tags t
+                      INNER JOIN content_tags ct ON t.id = ct.tag_id
+                      INNER JOIN content c ON ct.content_id = c.id
+                      WHERE c.status = 'published'
+                      GROUP BY t.id, t.name, t.slug
+                      ORDER BY usage_count DESC, t.name ASC
+                      LIMIT 12");
+$popularTags = $stmt->fetchAll();
+
 // SEO Configuration for Homepage
 $pageTitle = 'Home';
 $seoData = [
@@ -460,16 +471,17 @@ generateWebsiteStructuredData();
                 <!-- Tags Widget -->
                 <div class="widget widget-tags">
                     <h3 class="widget-title">Popular Tags</h3>
-                    <div class="tag-cloud">
-                        <a href="#" class="tag-item">Technology</a>
-                        <a href="#" class="tag-item">Reviews</a>
-                        <a href="#" class="tag-item">Apple</a>
-                        <a href="#" class="tag-item">Audio</a>
-                        <a href="#" class="tag-item">Gadgets</a>
-                        <a href="#" class="tag-item">Wireless</a>
-                        <a href="#" class="tag-item">Smart Home</a>
-                        <a href="#" class="tag-item">Gaming</a>
-                    </div>
+                    <?php if (!empty($popularTags)): ?>
+                        <div class="tag-cloud">
+                            <?php foreach ($popularTags as $tag): ?>
+                                <a href="/tag?name=<?php echo urlencode($tag['name']); ?>" class="tag-item" title="<?php echo htmlspecialchars($tag['usage_count']); ?> post<?php echo $tag['usage_count'] != 1 ? 's' : ''; ?>">
+                                    <?php echo htmlspecialchars($tag['name']); ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p style="color: var(--text-light); font-size: 0.875rem; margin: 0;">No tags yet. Tags will appear here as content is published.</p>
+                    <?php endif; ?>
                 </div>
                 
             </aside>

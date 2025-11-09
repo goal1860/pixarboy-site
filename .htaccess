@@ -19,6 +19,9 @@
     # Search URLs: /search
     RewriteRule ^search/?$ search.php [L,QSA]
     
+    # Tag URLs: /tag
+    RewriteRule ^tag/?$ tag.php [L,QSA]
+    
     # Sitemap rewrite
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
     
