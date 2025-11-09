@@ -232,77 +232,81 @@ include __DIR__ . '/../includes/header.php';
                 <a href="?action=new" class="btn btn-gradient">Create Your First Post</a>
             </div>
         <?php else: ?>
-            <div class="table-wrapper">
-                <table class="table">
+            <div class="table-wrapper admin-content-table-wrapper">
+                <table class="table admin-content-table">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Tags</th>
-                            <th>Product</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>Updated</th>
-                            <th>Actions</th>
+                            <th class="col-title">Title</th>
+                            <th class="col-tags">Tags</th>
+                            <th class="col-product">Product</th>
+                            <th class="col-status">Status</th>
+                            <th class="col-actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($contentList as $c): ?>
                         <tr>
                             <td>
-                                <strong><?php echo htmlspecialchars($c['title']); ?></strong>
-                                <br>
-                                <small style="color: var(--text-light);">/<?php echo htmlspecialchars($c['slug']); ?></small>
+                                <strong class="admin-content-title"><?php echo htmlspecialchars($c['title']); ?></strong>
                             </td>
-                            <td><?php echo htmlspecialchars($c['author']); ?></td>
                             <td>
                                 <?php if (!empty($c['tags'])): ?>
-                                    <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
-                                        <?php foreach ($c['tags'] as $tag): ?>
-                                            <span class="badge badge-info" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"><?php echo htmlspecialchars($tag); ?></span>
+                                    <div class="admin-content-tags-container">
+                                        <?php 
+                                        $displayTags = array_slice($c['tags'], 0, 3);
+                                        foreach ($displayTags as $tag): 
+                                        ?>
+                                            <span class="badge badge-info admin-content-tag-badge"><?php echo htmlspecialchars($tag); ?></span>
                                         <?php endforeach; ?>
+                                        <?php if (count($c['tags']) > 3): ?>
+                                            <span class="badge admin-content-tag-count" title="<?php echo htmlspecialchars(implode(', ', array_slice($c['tags'], 3))); ?>">
+                                                +<?php echo count($c['tags']) - 3; ?>
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
                                 <?php else: ?>
-                                    <span style="color: var(--text-light);">—</span>
+                                    <span class="admin-content-empty">—</span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <?php if ($c['product_name']): ?>
-                                    <span class="badge badge-info"><?php echo htmlspecialchars($c['product_name']); ?></span>
+                                    <span class="badge badge-info admin-content-product-badge" title="<?php echo htmlspecialchars($c['product_name']); ?>">
+                                        <?php echo htmlspecialchars($c['product_name']); ?>
+                                    </span>
                                 <?php else: ?>
-                                    <span style="color: var(--text-light);">—</span>
+                                    <span class="admin-content-empty">—</span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <span class="badge badge-<?php 
                                     echo $c['status'] === 'published' ? 'success' : 
                                         ($c['status'] === 'draft' ? 'warning' : 'danger'); 
-                                ?>">
+                                ?> admin-content-status-badge">
                                     <?php echo ucfirst($c['status']); ?>
                                 </span>
                             </td>
-                            <td><?php echo date('M j, Y', strtotime($c['created_at'])); ?></td>
-                            <td><?php echo date('M j, Y', strtotime($c['updated_at'])); ?></td>
                             <td class="table-actions">
-                                <?php if ($c['status'] === 'published'): ?>
-                                    <a href="/post/<?php echo htmlspecialchars($c['slug']); ?>" class="btn btn-secondary btn-sm" target="_blank" title="View Post">
-                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle;">
-                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                <div class="admin-content-actions-container">
+                                    <?php if ($c['status'] === 'published'): ?>
+                                        <a href="/post/<?php echo htmlspecialchars($c['slug']); ?>" class="btn btn-secondary btn-sm admin-content-action-btn" target="_blank" title="View Post">
+                                            <svg class="admin-content-action-icon" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                            </svg>
+                                        </a>
+                                    <?php endif; ?>
+                                    <a href="?action=edit&id=<?php echo $c['id']; ?>" class="btn btn-primary btn-sm admin-content-action-btn" title="Edit">
+                                        <svg class="admin-content-action-icon" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                         </svg>
                                     </a>
-                                <?php endif; ?>
-                                <a href="?action=edit&id=<?php echo $c['id']; ?>" class="btn btn-primary btn-sm" title="Edit">
-                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle;">
-                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-                                    </svg>
-                                </a>
-                                <a href="?action=delete&id=<?php echo $c['id']; ?>" class="btn btn-danger btn-sm" 
-                                   data-confirm="Are you sure you want to delete '<?php echo htmlspecialchars($c['title']); ?>'?" title="Delete">
-                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle;">
-                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                                    </svg>
-                                </a>
+                                    <a href="?action=delete&id=<?php echo $c['id']; ?>" class="btn btn-danger btn-sm admin-content-action-btn" 
+                                       data-confirm="Are you sure you want to delete '<?php echo htmlspecialchars($c['title']); ?>'?" title="Delete">
+                                        <svg class="admin-content-action-icon" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -310,7 +314,7 @@ include __DIR__ . '/../includes/header.php';
                 </table>
             </div>
             
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-light); text-align: center;">
+            <div class="admin-content-summary">
                 <p>Total: <strong><?php echo count($contentList); ?></strong> post(s)</p>
             </div>
         <?php endif; ?>
