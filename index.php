@@ -91,7 +91,7 @@ generateWebsiteStructuredData();
             </div>
             
             <div class="featured-hero-text">
-                <span class="featured-category">Latest Review</span>
+                <span class="featured-category">Latest Article</span>
                 <h2 class="featured-title">
                     <a href="/post/<?php echo htmlspecialchars($featuredPost['slug']); ?>">
                         <?php echo htmlspecialchars($featuredPost['title']); ?>
