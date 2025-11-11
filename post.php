@@ -39,6 +39,13 @@ $stmt->execute([$post['id']]);
 $relatedPosts = $stmt->fetchAll();
 
 $pageTitle = $post['title'];
+
+// Set preload image for LCP optimization (post hero image)
+$preloadImageUrl = null;
+if (!empty($post['hero_image_url'])) {
+    $preloadImageUrl = $post['hero_image_url'];
+}
+
 include __DIR__ . '/includes/header.php';
 ?>
 
@@ -91,7 +98,11 @@ include __DIR__ . '/includes/header.php';
         <!-- Featured Image -->
         <div class="post-featured-image" style="width: 100%; height: 400px; border-radius: 16px; margin-bottom: 3rem; box-shadow: var(--shadow-lg); overflow: hidden;">
             <?php if (!empty($post['hero_image_url'])): ?>
-                <img src="<?php echo htmlspecialchars($post['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="<?php echo htmlspecialchars($post['hero_image_url']); ?>" 
+                     alt="<?php echo htmlspecialchars($post['title']); ?>" 
+                     style="width: 100%; height: 100%; object-fit: cover;"
+                     fetchpriority="high"
+                     loading="eager">
             <?php else: ?>
                 <div style="width: 100%; height: 100%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
                     <?php echo strtoupper(substr($post['title'], 0, 1)); ?>

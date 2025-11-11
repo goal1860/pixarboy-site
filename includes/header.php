@@ -42,6 +42,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <?php if (isset($preloadImageUrl) && !empty($preloadImageUrl)): ?>
+        <link rel="preload" as="image" href="<?php echo htmlspecialchars($preloadImageUrl); ?>" fetchpriority="high">
+    <?php endif; ?>
 </head>
 <body>
     <!-- Navigation Bar -->

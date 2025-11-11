@@ -69,6 +69,12 @@ $seoData = [
     'url' => '/',
 ];
 
+// Set preload image for LCP optimization (featured post hero image)
+$preloadImageUrl = null;
+if (!empty($featuredPost['hero_image_url'])) {
+    $preloadImageUrl = $featuredPost['hero_image_url'];
+}
+
 include __DIR__ . '/includes/header.php';
 
 // Generate structured data for homepage
@@ -88,7 +94,10 @@ generateWebsiteStructuredData();
         <div class="featured-hero-content">
             <div class="featured-hero-image">
                 <?php if (!empty($featuredPost['hero_image_url'])): ?>
-                    <img src="<?php echo htmlspecialchars($featuredPost['hero_image_url']); ?>" alt="<?php echo htmlspecialchars($featuredPost['title']); ?>">
+                    <img src="<?php echo htmlspecialchars($featuredPost['hero_image_url']); ?>" 
+                         alt="<?php echo htmlspecialchars($featuredPost['title']); ?>"
+                         fetchpriority="high"
+                         loading="eager">
                 <?php else: ?>
                     <div class="featured-placeholder"></div>
                 <?php endif; ?>

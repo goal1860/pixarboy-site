@@ -77,6 +77,12 @@ $seoData = [
     'image' => $product['image_url'] ?: '/assets/images/og-default.jpg',
 ];
 
+// Set preload image for LCP optimization (product image)
+$preloadImageUrl = null;
+if (!empty($product['image_url'])) {
+    $preloadImageUrl = $product['image_url'];
+}
+
 include __DIR__ . '/includes/header.php';
 
 // Generate structured data for product
@@ -163,7 +169,9 @@ $Parsedown = new Parsedown();
                     <div style="text-align: center; margin-bottom: 2rem;">
                         <img src="<?php echo htmlspecialchars($product['image_url']); ?>" 
                              alt="<?php echo htmlspecialchars($product['name']); ?>"
-                             style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                             style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);"
+                             fetchpriority="high"
+                             loading="eager">
                     </div>
                 <?php endif; ?>
                 
