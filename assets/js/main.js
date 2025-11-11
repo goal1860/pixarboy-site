@@ -214,83 +214,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ============================================
-    // Copy to Clipboard Functionality
-    // ============================================
-    const copyButtons = document.querySelectorAll('[data-copy]');
-    copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const text = this.getAttribute('data-copy');
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = this.textContent;
-                this.textContent = 'Copied!';
-                this.style.background = '#51cf66';
-                
-                setTimeout(() => {
-                    this.textContent = originalText;
-                    this.style.background = '';
-                }, 2000);
-            });
-        });
-    });
-    
-    // ============================================
-    // Tooltip Functionality
-    // ============================================
-    const tooltipElements = document.querySelectorAll('[data-tooltip]');
-    tooltipElements.forEach(element => {
-        element.addEventListener('mouseenter', function(e) {
-            const tooltipText = this.getAttribute('data-tooltip');
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tooltip';
-            tooltip.textContent = tooltipText;
-            tooltip.style.cssText = `
-                position: absolute;
-                background: #2c3e50;
-                color: white;
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                font-size: 0.875rem;
-                z-index: 9999;
-                white-space: nowrap;
-                pointer-events: none;
-            `;
-            
-            document.body.appendChild(tooltip);
-            
-            const rect = this.getBoundingClientRect();
-            tooltip.style.top = (rect.top - tooltip.offsetHeight - 8) + 'px';
-            tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
-            
-            this.addEventListener('mouseleave', function() {
-                tooltip.remove();
-            }, { once: true });
-        });
-    });
-    
-    // ============================================
-    // Print Current Page
-    // ============================================
-    const printButtons = document.querySelectorAll('[data-print]');
-    printButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            window.print();
-        });
-    });
-    
-    // ============================================
     // View Switching (Grid/List)
     // ============================================
     const viewButtons = document.querySelectorAll('.view-btn');
     const postsContainer = document.getElementById('postsContainer');
     
-    console.log('View buttons found:', viewButtons.length);
-    console.log('Posts container found:', !!postsContainer);
-    
     if (viewButtons.length > 0 && postsContainer) {
         viewButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const view = this.getAttribute('data-view');
-                console.log('View button clicked:', view);
                 
                 // Update active button
                 viewButtons.forEach(btn => btn.classList.remove('active'));
@@ -300,11 +232,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (view === 'list') {
                     postsContainer.classList.remove('grid', 'grid-2');
                     postsContainer.classList.add('list-view');
-                    console.log('Switched to list view');
                 } else {
                     postsContainer.classList.remove('list-view');
                     postsContainer.classList.add('grid', 'grid-2');
-                    console.log('Switched to grid view');
                 }
                 
                 // Store preference in localStorage
@@ -321,6 +251,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
-    console.log('✨ Pixarboy CMS initialized successfully!');
 });

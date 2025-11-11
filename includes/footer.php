@@ -68,6 +68,6 @@
         </div>
     </footer>
     
-    <script src="<?php echo getAssetPath('js', 'main'); ?>"></script>
+    <script src="<?php echo getAssetPath('js', 'main'); ?>" defer></script>
 </body>
 </html>
