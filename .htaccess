@@ -25,13 +25,13 @@
     # Sitemap rewrite
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
     
-    # Force HTTPS (production ready)
-    RewriteCond %{HTTPS} off
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    
-    # Remove www subdomain (SEO: prevent duplicate content)
+    # Force HTTPS and remove www in a single redirect (prevents multiple redirects)
+    # This handles all cases: http://www, http://non-www, https://www → https://non-www
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+    # Force HTTPS for non-www domains
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </IfModule>
 
 # Security Headers
