@@ -297,6 +297,86 @@ a:hover {
     border-radius: 8px;
 }
 
+/* Filter Bar Styles */
+.filter-bar {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.filter-bar input,
+.filter-bar select {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-bar #filterTags .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    cursor: default;
+}
+
+.filter-bar #filterTags button {
+    padding: 0;
+    margin-left: 0.5rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.filter-bar #filterTags button:hover {
+    opacity: 1;
+}
+
+/* Category Group Styles */
+.category-group {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: opacity 0.3s ease;
+}
+
+.category-group:last-child {
+    border-bottom: none;
+}
+
+.category-group-header {
+    padding-bottom: 1rem;
+}
+
+.subcategory-link-card {
+    display: block;
+    cursor: pointer;
+}
+
+.subcategory-link-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.subcategory-link-card:hover div:first-child {
+    transform: scale(1.1);
+}
+
+/* Product Item Filtering */
+.product-item {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.product-item[style*="display: none"] {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
 /* User Navigation Item */
 .nav-user-item {
     display: flex;
@@ -2109,6 +2189,25 @@ select.form-control {
     
     .nav-dropdown-menu li a::before {
         display: none;
+    }
+    
+    /* Mobile Filter Bar */
+    .filter-bar {
+        position: static !important;
+        padding: 1rem !important;
+    }
+    
+    .filter-bar > div:first-child {
+        flex-direction: column;
+    }
+    
+    .filter-bar > div:first-child > div {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-bar #activeFilters {
+        margin-top: 1rem;
     }
     
     .nav-user-item {
