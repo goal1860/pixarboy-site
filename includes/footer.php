@@ -30,12 +30,10 @@
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="<?php echo BASE_URL; ?>/">Home</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/news.php">News</a></li>
                         <li><a href="<?php echo BASE_URL; ?>/categories.php">All Categories</a></li>
                         <li><a href="<?php echo BASE_URL; ?>/about.php">About</a></li>
-                        <?php if (isLoggedIn()): ?>
-                            <li><a href="<?php echo BASE_URL; ?>/admin/">Dashboard</a></li>
-                            <li><a href="<?php echo BASE_URL; ?>/admin/content.php">Content</a></li>
-                        <?php else: ?>
+                        <?php if (!isLoggedIn()): ?>
                             <li><a href="<?php echo BASE_URL; ?>/login.php">Login</a></li>
                         <?php endif; ?>
                     </ul>

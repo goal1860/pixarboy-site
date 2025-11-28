@@ -66,6 +66,7 @@
             <!-- Navigation Menu -->
             <ul class="nav-menu" id="navMenu">
                 <li><a href="/">Home</a></li>
+                <li><a href="/news.php">News</a></li>
                 <li><a href="/categories.php">Categories</a></li>
                 
                 <?php if (isLoggedIn()): ?>
