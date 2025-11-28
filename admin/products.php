@@ -10,6 +10,7 @@ $productId = $_GET['id'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'new' || $action === 'edit') {
         $name = sanitize($_POST['name']);
+        $brand = sanitize($_POST['brand'] ?? '');
         $slug = sanitize(strtolower(str_replace(' ', '-', $_POST['name'])));
         $description = $_POST['description']; // Allow HTML
         $price = $_POST['price'] ? floatval($_POST['price']) : null;
@@ -24,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
             
             if ($action === 'new') {
-                $stmt = $pdo->prepare("INSERT INTO products (name, slug, description, price, currency, affiliate_link, image_url, rating, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$name, $slug, $description, $price, $currency, $affiliateLink, $imageUrl, $rating, $status]);
+                $stmt = $pdo->prepare("INSERT INTO products (name, brand, slug, description, price, currency, affiliate_link, image_url, rating, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$name, $brand, $slug, $description, $price, $currency, $affiliateLink, $imageUrl, $rating, $status]);
                 $productId = $pdo->lastInsertId();
                 $message = 'Product created successfully!';
             } else {
-                $stmt = $pdo->prepare("UPDATE products SET name=?, slug=?, description=?, price=?, currency=?, affiliate_link=?, image_url=?, rating=?, status=? WHERE id=?");
-                $stmt->execute([$name, $slug, $description, $price, $currency, $affiliateLink, $imageUrl, $rating, $status, $productId]);
+                $stmt = $pdo->prepare("UPDATE products SET name=?, brand=?, slug=?, description=?, price=?, currency=?, affiliate_link=?, image_url=?, rating=?, status=? WHERE id=?");
+                $stmt->execute([$name, $brand, $slug, $description, $price, $currency, $affiliateLink, $imageUrl, $rating, $status, $productId]);
                 
                 // Delete existing categories
                 $stmt = $pdo->prepare("DELETE FROM product_categories WHERE product_id = ?");
@@ -329,6 +330,24 @@ include __DIR__ . '/../includes/header.php';
                     value="<?php echo isset($item) ? htmlspecialchars($item['name']) : ''; ?>" 
                     required
                 >
+            </div>
+            
+            <div class="form-group">
+                <label for="brand">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1a1 1 0 001-1v-1h-1zm-2 0H7v-4h6v4zm0-6H7V5h6v2z" clip-rule="evenodd"/>
+                    </svg>
+                    Brand
+                </label>
+                <input 
+                    type="text" 
+                    id="brand" 
+                    name="brand" 
+                    class="form-control" 
+                    placeholder="e.g. Apple, Samsung, Sony"
+                    value="<?php echo isset($item) ? htmlspecialchars($item['brand'] ?? '') : ''; ?>"
+                >
+                <small style="color: var(--text-light);">Product brand or manufacturer name</small>
             </div>
             
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">

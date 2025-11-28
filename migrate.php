@@ -143,7 +143,8 @@ try {
                 }
                 
                 echo "\n";
-                printInfo("Total: " . count($status) . " | Executed: " . $executedCount . " | Pending: " . $pendingCount);
+                $totalCount = is_array($status) ? count($status) : 0;
+                printInfo("Total: " . $totalCount . " | Executed: " . $executedCount . " | Pending: " . $pendingCount);
                 
                 if ($pendingCount > 0) {
                     echo "\n";
