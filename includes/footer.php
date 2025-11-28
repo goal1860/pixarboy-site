@@ -57,7 +57,7 @@
                     <h3>Contact</h3>
                     <ul class="footer-links">
                         <li><a href="mailto:info@<?php echo strtolower(str_replace(' ', '', SITE_NAME)); ?>.com">info@<?php echo strtolower(str_replace(' ', '', SITE_NAME)); ?>.com</a></li>
-                        <li><a href="#">Contact Form</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/contact.php">Contact Form</a></li>
                         <li><a href="#">Support Ticket</a></li>
                     </ul>
                 </div>

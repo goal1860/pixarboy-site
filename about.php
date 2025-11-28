@@ -192,14 +192,22 @@ generateBreadcrumbStructuredData([
                 Have a question, suggestion, or product you'd like us to review? We'd love to hear from you!
             </p>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <a href="mailto:<?php echo ADMIN_EMAIL; ?>" 
+                <a href="/contact.php" 
                    class="btn btn-primary" 
                    style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; color: white !important;">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20" style="color: white;">
+                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
+                    </svg>
+                    Contact Us
+                </a>
+                <a href="mailto:<?php echo ADMIN_EMAIL; ?>" 
+                   class="btn btn-secondary" 
+                   style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
                     </svg>
-                    Email Us
+                    Email Directly
                 </a>
             </div>
         </div>
