@@ -51,6 +51,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ============================================
+    // Dropdown Menu Toggle
+    // ============================================
+    const dropdownToggles = document.querySelectorAll('.nav-dropdown-toggle');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const dropdown = this.closest('.nav-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('active');
+                
+                // Close other dropdowns
+                document.querySelectorAll('.nav-dropdown').forEach(otherDropdown => {
+                    if (otherDropdown !== dropdown) {
+                        otherDropdown.classList.remove('active');
+                    }
+                });
+            }
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.nav-dropdown')) {
+            document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+        }
+    });
+    
+    // ============================================
     // Navbar Scroll Effect
     // ============================================
     const navbar = document.querySelector('.navbar');
