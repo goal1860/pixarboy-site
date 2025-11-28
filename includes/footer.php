@@ -30,6 +30,7 @@
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="<?php echo BASE_URL; ?>/">Home</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/categories.php">All Categories</a></li>
                         <li><a href="<?php echo BASE_URL; ?>/#about">About</a></li>
                         <?php if (isLoggedIn()): ?>
                             <li><a href="<?php echo BASE_URL; ?>/admin/">Dashboard</a></li>
